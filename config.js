@@ -3,8 +3,8 @@
  * Luồng thanh toán chính: SePay Cổng Thanh Toán (theo developer.sepay.vn)
  */
 var SITE_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/THAY_BANG_DEPLOY_ID/exec',
-  SITE_URL: 'https://YOUR-SITE.vercel.app',
+  API_URL: 'https://script.google.com/macros/s/AKfycby7unu5O0xJcu59PEuiovgjPaNENrIvGUwEIFgW5I93LtXoVRF-jP_7l5YL0Qn0AJHUfw/exec',
+  SITE_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app/',
 
   /**
    * pg   = chỉ SePay Cổng (khuyến nghị, đúng docs SePay)
