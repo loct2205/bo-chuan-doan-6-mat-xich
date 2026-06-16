@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chẩn đoán 6 Mắt Xích · Bộ Chẩn Đoán</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  .wrap{max-width:640px}
+  header{text-align:center;padding:var(--space-10) 0 var(--space-6);border-bottom:1px solid var(--line-soft)}
+  .sub{font-size:.9375rem;line-height:1.6}
+  .progress{height:6px;background:var(--line-soft);border-radius:99px;margin:var(--space-6) 0 var(--space-2);overflow:hidden}
+  .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold));border-radius:99px;transition:width .3s}
+  .prog-txt{font-size:.8125rem;color:var(--muted-dim);text-align:right;margin-bottom:var(--space-5);font-weight:600}
+  .qcard{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:var(--space-6);margin-bottom:var(--space-4);display:none;
+    box-shadow:var(--shadow-card);
+  }
+  .qcard.on{display:block}
+  .pillar{font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:var(--space-3)}
+  .qtext{font-size:1.0625rem;font-weight:700;margin-bottom:var(--space-5);line-height:1.45;color:var(--paper)}
+  .opts{display:flex;flex-direction:column;gap:var(--space-3)}
+  .opt{
+    background:var(--ink-elevated);border:1.5px solid var(--line);
+    border-radius:var(--radius-sm);padding:var(--space-4) var(--space-5);
+    cursor:pointer;font-size:.9375rem;color:var(--paper-soft);
+    transition:border-color .15s,background .15s,color .15s;
+    text-align:left;font-family:inherit;min-height:48px;line-height:1.45;
+  }
+  .opt:hover{border-color:var(--gold);color:var(--paper);background:rgba(240,193,77,.06)}
+  .opt.sel{border-color:var(--gold);background:rgba(240,193,77,.12);color:var(--paper);font-weight:600;box-shadow:var(--focus-ring)}
+  .nav{display:flex;gap:var(--space-3);margin-top:var(--space-4)}
+  .btn{
+    flex:1;min-height:48px;padding:var(--space-4);border:none;border-radius:var(--radius-sm);
+    font-family:inherit;font-weight:800;font-size:.9375rem;cursor:pointer;
+  }
+  .btn-back{background:var(--card);color:var(--muted);border:1.5px solid var(--line);transition:filter .15s,border-color .15s}
+  .btn-back:hover{filter:brightness(1.06);border-color:var(--gold)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn-next,.btn-gold{font-size:.9375rem;padding:var(--space-4)}
+  #result{display:none;padding-top:var(--space-4)}
+  .result-head{text-align:center;margin-bottom:var(--space-6)}
+  .score-ring{
+    width:120px;height:120px;border-radius:50%;border:8px solid var(--signal);
+    display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4);
+    font-size:2.25rem;font-weight:800;transition:border-color .4s;color:var(--paper);
+  }
+  .score-ring.ok{border-color:var(--good)}
+  .score-ring.mid{border-color:var(--gold)}
+  .score-label{color:var(--muted-dim);font-size:.8125rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+  .bars{margin:var(--space-6) 0;display:flex;flex-direction:column;gap:var(--space-4)}
+  .bar-row{display:flex;align-items:center;gap:var(--space-3);font-size:.875rem}
+  .bar-row .lbl{flex:0 0 6.5rem;color:var(--paper-soft);font-weight:600;line-height:1.3}
+  .bar-row .track{flex:1;height:10px;background:var(--ink-elevated);border-radius:99px;overflow:hidden;border:1px solid var(--line-soft)}
+  .bar-row .fill{height:100%;border-radius:99px;background:var(--good);transition:width .6s}
+  .bar-row .fill.weak{background:var(--signal)}
+  .bar-row .num{flex:0 0 2.25rem;text-align:right;color:var(--gold);font-weight:800}
+  .weak-box{
+    background:rgba(255,99,71,.1);border:1px solid rgba(255,99,71,.35);
+    border-radius:var(--radius-md);padding:var(--space-5);margin:var(--space-5) 0;text-align:left;
+  }
+  .weak-box h3{color:var(--signal);font-size:1rem;margin-bottom:var(--space-3)}
+  .weak-box p{color:var(--muted);font-size:.9375rem;line-height:1.55}
+  .weak-box ul{margin:var(--space-3) 0 0 1.25rem;color:var(--paper-soft);font-size:.9375rem;line-height:1.6}
+  .weak-box li{margin:var(--space-2) 0}
+  .actions{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-6)}
+  .actions a,.actions .btn-gold{
+    display:flex;align-items:center;justify-content:center;min-height:48px;
+    width:100%;text-decoration:none;border-radius:var(--radius-sm);font-size:.9375rem;
+  }
+  .link-kho{
+    background:var(--card);color:var(--paper);border:1.5px solid var(--line)!important;
+    font-weight:800;
+    transition:transform .22s cubic-bezier(.34,1.4,.64,1),border-color .2s ease,box-shadow .2s ease;
+  }
+  .link-kho:hover{
+    transform:translateY(-2px) scale(1.05);
+    border-color:var(--gold)!important;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Bài chẩn đoán · 12 câu hỏi</div>
+    <h1>Hệ thống bán hàng của bạn</h1>
+    <p class="sub">Trả lời thật, không có đúng sai. Mỗi câu chọn mức gần nhất với thực tế.</p>
+    <div class="progress"><i id="progBar" style="width:0%"></i></div>
+    <div class="prog-txt"><span id="progNum">0</span> / 12</div>
+  </header>
+
+  <div id="quiz"></div>
+
+  <div id="result">
+    <div class="result-head">
+      <div class="score-ring" id="scoreRing">0</div>
+      <div class="score-label">Điểm hệ thống /100</div>
+    </div>
+    <div class="bars" id="bars"></div>
+    <div class="weak-box" id="weakBox"></div>
+    <div class="actions">
+      <a class="btn-gold btn-pulse btn-pulse--gold btn-pulse--float link-drive" id="driveLink" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho tài liệu & công cụ →</a>
+      <a class="link-kho" href="kho-qua.html">Quay lại kho truy cập</a>
+    </div>
+  </div>
+
+  <footer>Bộ Chẩn Đoán 6 Mắt Xích · by Loc Tran</footer>
+</div>
+
+<script>
+const DRIVE = 'https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing';
+
+const PILLARS = [
+  { id:'product',   name:'Sản phẩm',   tips:['Viết rõ 1 câu: khách trả tiền để nhận gì','Đóng gói thành file/link giao tự động được','Thử mua flow của chính mình từ đầu đến cuối'] },
+  { id:'page',      name:'Trang bán',  tips:['Sale page có 1 CTA rõ, không rối','Thêm 2–3 review hoặc proof thật','Đọc lại trang bằng mắt khách, bỏ jargon'] },
+  { id:'payment',   name:'Thanh toán', tips:['Bật QR / cổng thanh toán tự động','Test chuyển khoản thật 1 lần','Email xác nhận gửi ngay sau khi trả tiền'] },
+  { id:'delivery',  name:'Chuyển giao',tips:['Link sản phẩm gửi tự động sau thanh toán','Viết email chuyển giao, copy từ kho tài liệu','Khách biết chính xác bước tiếp theo sau khi mua'] },
+  { id:'traffic',   name:'Thu hút',    tips:['Chọn 1 kênh chính, không scatter','Đăng theo lịch cố định 3–5 lần/tuần','Dùng 30 mẫu tiêu đề trong kho tài liệu'] },
+  { id:'followup',  name:'Follow-up',  tips:['Nhắc khách chưa thanh toán sau 24h','Email cảm ơn + hướng dẫn sau khi mua','Liệt kê 10 khách cũ, nhắn lại 1 lần'] }
+];
+
+const QUESTIONS = [
+  { pillar:0, q:'Sản phẩm của bạn có mô tả rõ ràng: khách biết họ nhận gì sau khi trả tiền?' },
+  { pillar:0, q:'Sản phẩm đã đóng gói xong (file, link, tool), sẵn sàng giao ngay khi có đơn?' },
+  { pillar:1, q:'Bạn có trang bán (landing page) chuyên cho sản phẩm này?' },
+  { pillar:1, q:'Trang bán có nút/kêu gọi mua rõ ràng: khách không phải hỏi "mua ở đâu"?' },
+  { pillar:2, q:'Khách có thể thanh toán online (QR, chuyển khoản có mã đơn) mà không cần bạn nhắn tay?' },
+  { pillar:2, q:'Hệ thống tự nhận diện khi tiền về và xác nhận đơn?' },
+  { pillar:3, q:'Sau khi trả tiền, khách nhận link/file sản phẩm tự động (email hoặc trang cảm ơn)?' },
+  { pillar:3, q:'Khách không cần chờ bạn online để nhận hàng?' },
+  { pillar:4, q:'Bạn có nguồn khách đều đặn (content, ads, cộng đồng), không chỉ đăng khi nhớ?' },
+  { pillar:4, q:'Tuần này có người mới vào inbox/trang, không chỉ khách cũ?' },
+  { pillar:5, q:'Bạn có nhắc khách chưa thanh toán hoặc chưa mở sản phẩm?' },
+  { pillar:5, q:'Bạn có liên hệ lại khách cũ để upsell hoặc tái kích hoạt?' }
+];
+
+const OPTIONS = [
+  { label:'Chưa có / Hoàn toàn tay', score:1 },
+  { label:'Có nhưng chưa ổn', score:2 },
+  { label:'Tạm được, còn thiếu', score:3 },
+  { label:'Ổn, chạy được', score:4 },
+  { label:'Tự động trọn vẹn', score:5 }
+];
+
+let cur = 0, answers = [];
+
+function renderQuiz() {
+  const el = document.getElementById('quiz');
+  el.innerHTML = QUESTIONS.map((item, i) => `
+    <div class="qcard${i===0?' on':''}" data-i="${i}">
+      <div class="pillar">${PILLARS[item.pillar].name}</div>
+      <div class="qtext">${item.q}</div>
+      <div class="opts">
+        ${OPTIONS.map((o,j)=>`<button type="button" class="opt" data-score="${o.score}" onclick="pick(${i},${j},${o.score})">${o.label}</button>`).join('')}
+      </div>
+      <div class="nav">
+        ${i>0?`<button type="button" class="btn btn-back" onclick="go(${i-1})">← Câu trước</button>`:'<span style="flex:1"></span>'}
+        ${i<11?`<button type="button" class="btn btn-next btn-pulse" id="next${i}" disabled onclick="go(${i+1})">Câu tiếp →</button>`
+              :`<button type="button" class="btn btn-gold btn-pulse btn-pulse--gold" id="next${i}" disabled onclick="showResult()">Xem kết quả →</button>`}
+      </div>
+    </div>`).join('');
+}
+
+function pick(qi, oi, score) {
+  answers[qi] = score;
+  const card = document.querySelector(`.qcard[data-i="${qi}"]`);
+  card.querySelectorAll('.opt').forEach((b,j)=>b.classList.toggle('sel',j===oi));
+  const next = document.getElementById('next'+qi);
+  if(next) next.disabled = false;
+  document.getElementById('progNum').textContent = answers.filter(a=>a>0).length;
+  document.getElementById('progBar').style.width = (answers.filter(a=>a>0).length/12*100)+'%';
+}
+
+function go(n) {
+  document.querySelectorAll('.qcard').forEach(c=>c.classList.remove('on'));
+  document.querySelector(`.qcard[data-i="${n}"]`).classList.add('on');
+  cur = n;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResult() {
+  if(answers.length<12||answers.some(a=>!a)){alert('Trả lời đủ 12 câu nhé.');return;}
+  document.getElementById('quiz').style.display='none';
+  document.querySelector('header .progress').style.display='none';
+  document.querySelector('.prog-txt').style.display='none';
+  document.getElementById('result').style.display='block';
+
+  const pillarScores = PILLARS.map((_,pi)=>{
+    const qs = QUESTIONS.map((q,i)=>q.pillar===pi?answers[i]:0).filter(s=>s>0);
+    const avg = qs.reduce((a,b)=>a+b,0)/qs.length;
+    return Math.round(avg/5*100);
+  });
+  const total = Math.round(pillarScores.reduce((a,b)=>a+b,0)/6);
+  const min = Math.min(...pillarScores);
+  const weakIdx = pillarScores.indexOf(min);
+
+  const ring = document.getElementById('scoreRing');
+  ring.textContent = total;
+  ring.className = 'score-ring '+(total>=70?'ok':total>=45?'mid':'');
+
+  document.getElementById('bars').innerHTML = PILLARS.map((p,i)=>`
+    <div class="bar-row">
+      <span class="lbl">${p.name}</span>
+      <div class="track"><div class="fill${pillarScores[i]===min?' weak':''}" style="width:${pillarScores[i]}%"></div></div>
+      <span class="num">${pillarScores[i]}</span>
+    </div>`).join('');
+
+  const p = PILLARS[weakIdx];
+  document.getElementById('weakBox').innerHTML = `
+    <h3>⚠ Mắt xích yếu nhất: ${p.name} (${min}/100)</h3>
+    <p>Đây là nơi bạn đang để tiền rơi vãi nhất. Ưu tiên sửa 3 việc sau:</p>
+    <ul>${p.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <p style="margin-top:12px;font-size:13px">Mở checklist + prompt trong <b style="color:var(--paper)">kho tài liệu</b>, làm theo mắt xích ${p.name} trước.</p>`;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+renderQuiz();
+</script>
+</body>
+</html>

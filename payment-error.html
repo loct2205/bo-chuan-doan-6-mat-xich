@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanh toán thất bại</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  .box{max-width:28rem;margin:var(--space-12) auto;text-align:center;padding:var(--space-8)}
+  .ic{font-size:3rem;margin-bottom:var(--space-4)}
+  p{color:var(--muted);line-height:1.6;margin:var(--space-4) 0}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="ic">⚠️</div>
+  <h1>Thanh toán chưa thành công</h1>
+  <p>Giao dịch không hoàn tất trên cổng SePay. Tiền chưa bị trừ (hoặc sẽ hoàn nếu ngân hàng treo).</p>
+  <p class="muted" id="orderNote"></p>
+  <a href="sale-page.html#mua" class="cta-btn btn-pulse" style="margin-top:var(--space-6)">Thử thanh toán lại →</a>
+</div>
+<script>
+  var o=new URLSearchParams(location.search).get('order');
+  if(o)document.getElementById('orderNote').textContent='Mã đơn: '+o;
+</script>
+</body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bộ Chẩn Đoán 6 Mắt Xích · Biết chỗ đang mất tiền + bộ công cụ triển khai</title>
+<meta name="description" content="Có khách, có content mà vẫn không ra tiền? 12 câu hỏi chỉ ra mắt xích đang rò doanh thu + bộ công cụ triển khai thực chiến. 99.000đ.">
+<link rel="canonical" href="https://your-site.com/he-thong-ban-hang-tu-dong">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="product">
+<meta property="og:title" content="Có khách mà không ra tiền? Tìm chỗ đang rò, sửa trong 7 ngày">
+<meta property="og:description" content="12 câu hỏi chỉ ra mắt xích yếu nhất + bộ công cụ: prompt AI, checklist, tiêu đề, email, máy tính doanh thu.">
+<meta property="og:locale" content="vi_VN">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Bộ Chẩn Đoán 6 Mắt Xích",
+  "description": "12 câu hỏi chỉ ra mắt xích đang rò doanh thu, kèm bộ công cụ PDF và template triển khai ngay.",
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "VND",
+    "price": "99000",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+<link rel="stylesheet" href="theme.css">
+<style>
+  :root{--urgency-h:58px}
+  body.has-urgency-bar{padding-top:var(--urgency-h)}
+  @media(max-width:640px){:root{--urgency-h:84px}}
+
+  .urgency-bar{
+    position:fixed;top:0;left:0;right:0;z-index:55;
+    background:linear-gradient(180deg,#2d1512 0%,#1a2f42 55%,#0f2233 100%);
+    border-bottom:2px solid rgba(240,193,77,.55);
+    box-shadow:
+      0 10px 40px rgba(0,0,0,.55),
+      0 4px 16px rgba(255,99,71,.18),
+      inset 0 1px 0 rgba(255,255,255,.1);
+    animation:urgency-bar-in .45s ease-out,urgency-bar-glow 3s ease-in-out 0.5s infinite;
+  }
+  .urgency-bar::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent 5%,var(--gold) 50%,transparent 95%);
+    opacity:.85;
+  }
+  @keyframes urgency-bar-in{
+    from{translate:0 -110%;opacity:0}
+    to{translate:0 0;opacity:1}
+  }
+  @keyframes urgency-bar-glow{
+    0%,100%{box-shadow:0 10px 40px rgba(0,0,0,.55),0 4px 16px rgba(255,99,71,.18),inset 0 1px 0 rgba(255,255,255,.1)}
+    50%{box-shadow:0 14px 48px rgba(0,0,0,.62),0 6px 24px rgba(240,193,77,.22),inset 0 1px 0 rgba(255,255,255,.14)}
+  }
+  .urgency-bar__inner{
+    max-width:720px;margin:0 auto;padding:var(--space-3) var(--space-4);
+    display:flex;align-items:center;justify-content:center;gap:var(--space-4);
+    flex-wrap:wrap;min-height:var(--urgency-h);
+    position:relative;z-index:1;
+  }
+  .urgency-bar__tag{
+    flex-shrink:0;font-size:.6875rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    background:linear-gradient(180deg,var(--signal),var(--signal-dark));
+    color:#fff;padding:6px 12px;border-radius:99px;
+    box-shadow:0 2px 12px rgba(255,99,71,.45);
+    animation:urgency-tag-pulse 2s ease-in-out infinite;
+  }
+  @keyframes urgency-tag-pulse{
+    0%,100%{box-shadow:0 2px 12px rgba(255,99,71,.45),0 0 0 0 rgba(255,99,71,.5)}
+    50%{box-shadow:0 2px 16px rgba(255,99,71,.6),0 0 0 8px rgba(255,99,71,0)}
+  }
+  .urgency-bar__msg{
+    font-size:.875rem;color:var(--paper);line-height:1.4;text-align:center;font-weight:500;
+  }
+  .urgency-bar__msg b{color:var(--gold);font-weight:800}
+  .urgency-bar__timer{
+    display:flex;align-items:center;gap:5px;flex-shrink:0;
+    background:rgba(6,18,32,.5);border:1px solid rgba(240,193,77,.35);
+    border-radius:var(--radius-sm);padding:4px 8px;
+    box-shadow:0 2px 12px rgba(0,0,0,.25);
+  }
+  .urgency-bar__unit{
+    display:flex;flex-direction:column;align-items:center;min-width:2.5rem;
+    background:rgba(6,18,32,.85);border:1px solid rgba(240,193,77,.3);
+    border-radius:6px;padding:3px 7px 4px;
+  }
+  .urgency-bar__unit b{
+    font-size:1.125rem;font-weight:800;color:var(--gold);line-height:1.1;
+    font-variant-numeric:tabular-nums;
+    text-shadow:0 0 12px rgba(240,193,77,.35);
+  }
+  .urgency-bar__unit small{font-size:.5625rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .urgency-bar__sep{color:var(--gold);font-weight:800;font-size:1rem;padding:0 1px;opacity:.9}
+  .urgency-bar__cta{
+    flex-shrink:0;font-size:.8125rem;font-weight:800;color:var(--ink);text-decoration:none;
+    background:linear-gradient(180deg,#f5cc5a,var(--gold-dark));
+    padding:10px 18px;border-radius:99px;white-space:nowrap;
+    position:relative;overflow:visible;
+    animation:btn-pulse-ring 2.2s ease-out infinite;
+    --pulse-color:var(--pulse-gold);
+    box-shadow:0 4px 16px rgba(240,193,77,.35);
+    transition:transform .22s cubic-bezier(.34,1.4,.64,1),filter .2s ease,box-shadow .2s ease;
+  }
+  .urgency-bar__cta:hover{
+    animation:none!important;
+    transform:translateY(-3px) scale(1.08)!important;
+    filter:brightness(1.1);
+    box-shadow:0 8px 26px rgba(240,193,77,.5);
+  }
+  .urgency-bar--hot{
+    border-bottom-color:rgba(255,99,71,.7);
+  }
+  .urgency-bar--hot .urgency-bar__timer{
+    border-color:rgba(255,99,71,.5);
+    animation:urgency-timer-shake .6s ease-in-out infinite;
+  }
+  .urgency-bar--hot .urgency-bar__unit{border-color:rgba(255,99,71,.55)}
+  .urgency-bar--hot .urgency-bar__unit b{
+    color:var(--signal);
+    text-shadow:0 0 14px rgba(255,99,71,.45);
+    animation:urgency-digit-pulse 1s ease-in-out infinite;
+  }
+  @keyframes urgency-timer-shake{
+    0%,100%{translate:0 0}
+    25%{translate:-1px 0}
+    75%{translate:1px 0}
+  }
+  @keyframes urgency-digit-pulse{
+    0%,100%{opacity:1}
+    50%{opacity:.85}
+  }
+  @media(max-width:640px){
+    .urgency-bar__inner{gap:var(--space-2);padding:var(--space-2) var(--space-3)}
+    .urgency-bar__msg{font-size:.8125rem;flex:1 1 100%;order:2}
+    .urgency-bar__timer{order:3;padding:3px 6px}
+    .urgency-bar__cta{order:4;margin-left:auto;padding:9px 16px}
+    .urgency-bar__tag{order:1}
+    .urgency-bar__unit b{font-size:1rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .urgency-bar,.urgency-bar__tag,.urgency-bar--hot .urgency-bar__timer,
+    .urgency-bar--hot .urgency-bar__unit b{animation:none!important}
+  }
+
+  header{text-align:center;padding:var(--space-10) var(--space-5) var(--space-8)}
+  .lede{margin:0 auto var(--space-8);line-height:var(--leading)}
+  .hero-cta{margin:var(--space-6) auto 0;max-width:28rem}
+  .cta-sub{
+    display:block;color:var(--paper-soft);font-size:.875rem;
+    margin-top:var(--space-4);line-height:1.65;letter-spacing:.015em;
+  }
+
+  .mock{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:var(--space-8) var(--space-6) var(--space-6);text-align:center;
+    margin:var(--space-10) 0 var(--space-2);box-shadow:var(--shadow-card);
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .mock .demo-tag{
+    display:inline-block;
+    font-size:.6875rem;letter-spacing:.1em;text-transform:uppercase;
+    background:rgba(240,193,77,.14);color:var(--gold);
+    border:1px solid rgba(240,193,77,.5);border-radius:99px;
+    padding:7px 16px;font-weight:700;white-space:nowrap;line-height:1.3;
+    margin-bottom:var(--space-6);
+  }
+  .mock .ring{
+    width:112px;height:112px;border-radius:50%;border:8px solid var(--signal);
+    color:var(--paper);display:flex;align-items:center;justify-content:center;
+    margin:0 auto var(--space-5);font-size:2rem;font-weight:800;
+  }
+  .mock h3{
+    font-size:1rem;color:var(--paper);margin:0 0 var(--space-6);
+    padding:0 var(--space-2);line-height:1.55;letter-spacing:.01em;
+  }
+  .mock p{color:var(--muted);font-size:.9375rem;line-height:1.55}
+  .mock .fine{font-size:.8125rem;color:var(--paper-dim);margin-top:var(--space-4);line-height:1.55}
+
+  .pain{display:flex;flex-direction:column;gap:var(--space-3);list-style:none}
+  .pain li{
+    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--signal);
+    border-radius:var(--radius-sm);padding:var(--space-4) var(--space-5);
+    font-size:.9375rem;color:var(--paper-soft);line-height:1.6;
+  }
+  .pain li em{color:var(--gold);font-style:normal;font-weight:600}
+
+  .benefits{display:flex;flex-direction:column;gap:var(--space-5)}
+  .ben{display:flex;gap:var(--space-4);align-items:flex-start;padding:var(--space-4);background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md)}
+  .ben .chk{
+    flex:0 0 32px;height:32px;border-radius:50%;background:var(--gold);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.9375rem;margin-top:2px;
+  }
+  .ben h3{font-size:1rem;margin-bottom:var(--space-2)}
+  .ben p{color:var(--muted);font-size:.9375rem;margin:0;line-height:1.55}
+
+  .proof{display:flex;flex-direction:column;gap:var(--space-4)}
+  .review{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-md);padding:var(--space-5) var(--space-6)}
+  .review .stars{color:var(--gold);font-size:.9375rem;letter-spacing:.12em;margin-bottom:var(--space-2)}
+  .review p{font-size:.9375rem;margin:0 0 var(--space-2);color:var(--paper-soft);line-height:1.55}
+  .review .who{color:var(--muted-dim);font-size:.8125rem}
+  .proof-note{color:var(--muted-dim);font-size:.8125rem;font-style:italic;margin-top:var(--space-2)}
+
+  .policy-box{
+    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--signal);
+    border-radius:var(--radius-md);padding:var(--space-6);display:flex;gap:var(--space-4);
+    align-items:flex-start;margin-top:var(--space-2);box-shadow:var(--shadow-card);
+  }
+  .policy-box .ic{
+    flex:0 0 32px;height:32px;border-radius:50%;background:var(--signal);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.875rem;margin-top:2px;
+  }
+  .policy-box p{color:var(--muted);font-size:.9375rem;margin:var(--space-2) 0 0;line-height:1.6}
+  .policy-box p b,.policy-box li b{color:var(--paper)}
+  .policy-box .warn{color:var(--paper);font-size:1rem;line-height:1.55}
+  .policy-box ul{color:var(--muted);font-size:.875rem;margin:var(--space-3) 0 0 1.25rem;line-height:1.65}
+  .policy-box li{margin:var(--space-2) 0}
+
+  .offer{
+    background:linear-gradient(155deg,#173448 0%,var(--card) 50%,#0c1f2e 100%);
+    border:1.5px solid var(--gold);border-radius:var(--radius-xl);
+    padding:var(--space-10) var(--space-8);margin:var(--space-12) 0 0;text-align:center;
+    box-shadow:var(--shadow-offer);
+  }
+  .limit{display:inline-block;background:var(--signal);color:#fff;font-size:.6875rem;font-weight:800;letter-spacing:.08em;padding:6px 16px;border-radius:99px;margin-bottom:var(--space-4);text-transform:uppercase}
+  .price{display:flex;align-items:baseline;justify-content:center;gap:var(--space-3);margin:var(--space-2) 0}
+  .price .now{font-size:2.875rem;font-weight:800;color:var(--gold);line-height:1}
+  .price .was{font-size:1.25rem;color:var(--muted-dim);text-decoration:line-through}
+  .offer-lead{color:var(--muted);font-size:.9375rem;margin-bottom:var(--space-2)}
+  .incl{
+    text-align:left;max-width:32rem;margin:var(--space-6) auto 0;
+    display:flex;flex-direction:column;gap:var(--space-3);
+  }
+  .incl-item{
+    display:flex;gap:var(--space-4);align-items:flex-start;
+    background:rgba(6,18,32,.55);border:1px solid var(--line);
+    border-radius:var(--radius-md);padding:var(--space-4) var(--space-5);
+    transition:border-color .2s,background .2s;
+  }
+  .incl-item:hover{border-color:var(--line-soft);background:rgba(6,18,32,.75)}
+  .incl-num{
+    flex:0 0 2rem;height:2rem;border-radius:50%;
+    background:rgba(240,193,77,.15);border:1px solid rgba(240,193,77,.4);
+    color:var(--gold);font-weight:800;font-size:.875rem;
+    display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+  .incl-body{display:flex;flex-direction:column;gap:var(--space-1);min-width:0}
+  .incl-title{font-size:.9375rem;font-weight:700;color:var(--paper);line-height:1.4}
+  .incl-desc{font-size:.8125rem;color:var(--muted);line-height:1.55}
+  .incl-item--vault{
+    border-color:rgba(240,193,77,.45);
+    background:rgba(240,193,77,.06);
+  }
+  .incl-item--vault .incl-num{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+  .incl-item--vault .incl-title{color:var(--gold)}
+  .offer .cta-btn{width:100%;max-width:32rem;margin-top:var(--space-6)}
+  .offer-closing{margin-top:var(--space-5);font-size:.9375rem;color:var(--muted);line-height:1.6}
+  .pay-warn{color:var(--paper)!important;line-height:1.55}
+
+  .section-cta{text-align:center;margin:var(--space-8) 0}
+
+  .modal{display:none;position:fixed;inset:0;background:rgba(4,10,18,.9);backdrop-filter:blur(6px);z-index:50;align-items:center;justify-content:center;padding:var(--space-5)}
+  .modal.on{display:flex}
+  .box{background:var(--card);border:1px solid var(--gold);border-radius:var(--radius-lg);max-width:28rem;width:100%;padding:var(--space-8) var(--space-6);max-height:92vh;overflow:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+  .box h3{font-size:1.375rem;font-weight:800;margin-bottom:var(--space-2)}
+  .box .step{color:var(--muted-dim);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:var(--space-4)}
+  .qr{background:#fff;border-radius:var(--radius-sm);padding:var(--space-5);text-align:center;margin:var(--space-3) 0 var(--space-4);min-height:168px;display:flex;flex-direction:column;justify-content:center}
+  .qr img{width:200px;max-width:100%;margin:0 auto}
+  .qr .info{color:var(--ink);font-size:.875rem;margin-top:var(--space-3);font-weight:600;line-height:1.45}
+  .confirm{width:100%;margin-top:var(--space-5)}
+  .confirm:disabled{opacity:.55;cursor:wait}
+  .closex{float:right;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;padding:var(--space-2);margin:-var(--space-2);border-radius:8px}
+  .closex:hover{color:var(--paper);background:rgba(255,255,255,.06)}
+  .deliver{display:none;text-align:center}
+  .deliver .tick{width:68px;height:68px;border-radius:50%;background:var(--good);color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4)}
+  .deliver p{color:var(--muted);font-size:.9375rem;margin-bottom:var(--space-5);line-height:1.55}
+  .access{width:100%;display:flex}
+  .note{font-size:.8125rem;color:var(--muted-dim);margin-top:var(--space-4);line-height:1.5}
+  .pay-tabs{display:flex;gap:var(--space-2);margin-bottom:var(--space-4)}
+  .pay-tabs button{flex:1;min-height:44px;padding:var(--space-3);border-radius:var(--radius-sm);border:1.5px solid var(--line);background:var(--ink);color:var(--muted);font-family:inherit;font-size:.8125rem;font-weight:700;cursor:pointer;line-height:1.3}
+  .pay-tabs button.on{border-color:var(--gold);color:var(--gold);background:rgba(240,193,77,.1)}
+  .pay-pane{display:none}
+  .pay-pane.on{display:block}
+  .pg-flow{
+    list-style:none;margin:0 0 var(--space-5);padding:0;
+    display:flex;flex-direction:column;gap:var(--space-3);
+  }
+  .pg-flow li{
+    display:flex;gap:var(--space-3);align-items:flex-start;
+    font-size:.8125rem;color:var(--muted);line-height:1.5;
+  }
+  .pg-flow .n{
+    flex:0 0 1.5rem;height:1.5rem;border-radius:50%;
+    background:rgba(240,193,77,.15);border:1px solid rgba(240,193,77,.4);
+    color:var(--gold);font-size:.6875rem;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .pg-badge{
+    text-align:center;font-size:.6875rem;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted-dim);margin-bottom:var(--space-3);
+  }
+  .pg-badge span{
+    display:inline-block;padding:4px 10px;border-radius:99px;
+    background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.35);color:#6ee7a0;
+  }
+  .alt-pay{margin-top:var(--space-5);border-top:1px solid var(--line);padding-top:var(--space-4)}
+  .alt-pay summary{
+    cursor:pointer;font-size:.8125rem;font-weight:700;color:var(--muted);
+    list-style:none;text-align:center;padding:var(--space-2) 0;
+  }
+  .alt-pay summary::-webkit-details-marker{display:none}
+  .alt-pay[open] summary{color:var(--gold);margin-bottom:var(--space-3)}
+  .paypal-box{background:#fff;border-radius:var(--radius-sm);padding:var(--space-5);text-align:center;margin:var(--space-3) 0 var(--space-4)}
+  .paypal-box img{max-width:200px;width:100%;border-radius:8px}
+  .paypal-note{font-size:.875rem;color:var(--paper-soft);text-align:left;background:rgba(255,99,71,.08);border-left:3px solid var(--signal);padding:var(--space-4);border-radius:var(--radius-sm);margin-top:var(--space-4);line-height:1.55}
+</style>
+</head>
+<body class="has-urgency-bar">
+<div class="urgency-bar" id="urgencyBar" role="banner" aria-label="Ưu đãi có thời hạn">
+  <div class="urgency-bar__inner">
+    <span class="urgency-bar__tag">Giá mở hàng</span>
+    <p class="urgency-bar__msg">
+      <b id="urgencyPrice">99.000đ</b> · còn <b id="urgencySlots">20</b> suất · kết thúc sau
+    </p>
+    <div class="urgency-bar__timer" id="urgencyTimer" aria-live="polite" aria-atomic="true">
+      <span class="urgency-bar__unit"><b id="cdH">00</b><small>giờ</small></span>
+      <span class="urgency-bar__sep">:</span>
+      <span class="urgency-bar__unit"><b id="cdM">00</b><small>phút</small></span>
+      <span class="urgency-bar__sep">:</span>
+      <span class="urgency-bar__unit"><b id="cdS">00</b><small>giây</small></span>
+    </div>
+    <a href="#mua" class="urgency-bar__cta">Mua ngay →</a>
+  </div>
+</div>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Dành cho người bán hàng online</div>
+    <h1>Có khách inbox…<br>mà tiền vẫn <span class="hl">không về túi</span>?</h1>
+    <p class="lede">Không phải bạn thiếu cố gắng. Có thể bạn đang sửa sai chỗ. <b style="color:var(--paper)">12 câu hỏi, 15 phút</b> để biết mắt xích nào đang rò tiền, kèm <b style="color:var(--paper)">bộ công cụ triển khai</b> hành động ngay sau chẩn đoán.</p>
+    <div class="hero-cta">
+      <a href="#mua" class="cta-btn btn-pulse btn-pulse--float">Cho tôi biết chỗ đang rò tiền · 99.000đ</a>
+      <span class="cta-sub">Chẩn đoán + bộ công cụ triển khai · Một lần mua, dùng trọn đời</span>
+    </div>
+    <div class="mock">
+      <span class="demo-tag">Xem trước · không phải kết quả thật</span>
+      <h3>Sau khi mua, bạn làm bài chẩn đoán và nhận kết quả kiểu này:</h3>
+      <div class="ring">72</div>
+      <p>Điểm /100 cho cả hệ thống · biểu đồ 6 mắt xích · mắt xích đỏ = đang yếu nhất · gợi ý 3 việc sửa trước</p>
+      <p class="fine">Số <b style="color:var(--gold)">72</b> chỉ là ví dụ minh họa. Điểm thật của bạn ra sau khi trả lời 12 câu trong tool chẩn đoán.</p>
+    </div>
+  </header>
+
+  <h2>Bạn có đang ở đây không?</h2>
+  <ul class="pain">
+    <li>Đăng bài đều, inbox có người hỏi, nhưng cuối tháng nhìn sổ vẫn thấy… chẳng khác mấy.</li>
+    <li>Mỗi sáng mở điện thoại tự hỏi <em>"hôm nay làm gì đây?"</em>, làm nhiều việc mà không chắc việc nào thực sự ra tiền.</li>
+    <li>Có sản phẩm, có trang, có khách, nhưng mọi thứ rời rạc. Bán vẫn phải nhắn tay, gửi link, nhắc thanh toán… mệt mà không scale được.</li>
+  </ul>
+
+  <h2>Không cần thêm khóa học. Cần biết sửa cái gì trước.</h2>
+  <div class="benefits">
+    <div class="ben"><div class="chk">1</div><div>
+      <h3>Ngừng đoán. Nhìn thấy bằng con số.</h3>
+      <p>Điểm /100 cho cả hệ thống và từng mắt xích riêng. Lần đầu tiên bạn biết chính xác mình đang ở đâu, không phải "cảm giác là ổn".</p></div></div>
+    <div class="ben"><div class="chk">2</div><div>
+      <h3>Biết tiền đang chảy ra lỗ hổng nào</h3>
+      <p>6 mắt xích: Sản phẩm · Trang bán · Thanh toán · Chuyển giao · Thu hút · Follow-up. Mắt xích yếu nhất được đánh dấu. Đó là nơi bạn đang để tiền rơi vãi.</p></div></div>
+    <div class="ben"><div class="chk">3</div><div>
+      <h3>Nhận bộ công cụ, không chỉ biết vấn đề</h3>
+      <p>Prompt AI, checklist 6 mắt xích, mẫu tiêu đề, email, máy tính doanh thu. Gom trong một kho tài liệu trực tuyến, tải về dùng ngay.</p></div></div>
+    <div class="ben"><div class="chk">4</div><div>
+      <h3>30 ngày sau, quét lại và thấy mình tiến bộ</h3>
+      <p>Sửa xong một mắt xích, làm lại bài chẩn đoán. Điểm tăng = bạn đi đúng hướng. Đó là cảm giác mà "xem thêm video" không cho bạn.</p></div></div>
+  </div>
+
+  <div class="section-cta">
+    <a href="#mua" class="cta-btn btn-pulse">Tôi muốn biết mình đang sai ở đâu</a>
+  </div>
+
+  <h2>Những người đã dùng nói gì</h2>
+  <div class="proof">
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p>[Chỗ này điền nhận xét thật của khách đầu tiên sau khi họ dùng tool.]</p>
+      <div class="who">Tên khách, nghề nghiệp</div>
+    </div>
+    <div class="review">
+      <div class="stars">★★★★★</div>
+      <p>[Một nhận xét thật khác, tốt nhất kèm ảnh chụp màn hình kết quả họ nhận được.]</p>
+      <div class="who">Tên khách, nghề nghiệp</div>
+    </div>
+    <p class="proof-note">Đang chờ review từ khách đầu tiên, sẽ cập nhật ngay khi có. Không dùng đánh giá giả.</p>
+  </div>
+
+  <h2>Đọc kỹ phần này trước khi mua</h2>
+  <div class="policy-box">
+    <div class="ic">!</div>
+    <div>
+      <h3 style="color:var(--paper)">Hãy suy nghĩ thật kỹ. Mua xong không hoàn tiền</h3>
+      <p>Đây là sản phẩm số. Bạn nhận link ngay sau khi chuyển khoản, và <b style="color:var(--paper)">mình không hoàn tiền</b> trong mọi trường hợp: đã mở hay chưa mở, đã dùng hay chưa dùng, đổi ý hay không hài lòng.</p>
+      <p class="warn" style="margin-top:10px"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b> Đừng chuyển khoản khi bạn còn phân vân.</p>
+      <p style="margin-top:10px">Mình khuyên bạn <b style="color:var(--paper)">đọc lại toàn bộ trang này</b>, xem bạn có thực sự cần bài chẩn đoán + bộ công cụ triển khai không. Nếu chưa chắc, <b style="color:var(--paper)">đừng mua vội</b>. Nhắn mình trước, hỏi hết mọi thứ, rồi hãy quyết.</p>
+      <ul>
+        <li><b style="color:var(--paper)">Bộ 99.000đ:</b> truy cập trọn đời, gồm chẩn đoán + kho tài liệu & công cụ đi kèm</li>
+        <li><b style="color:var(--paper)">Khóa 499.000đ</b> (nếu bạn muốn đi tiếp): 12 tháng học, không tự gia hạn, cũng không hoàn tiền</li>
+        <li>Chỉ thanh toán khi bạn <b style="color:var(--paper)">chắc chắn</b> đây là thứ mình cần lúc này</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="offer" id="mua">
+    <span class="limit">20 suất đầu · giá mở hàng</span>
+    <div class="price"><span class="now">99.000đ</span><span class="was">249.000đ</span></div>
+    <p class="offer-lead">Ít hơn một bữa ăn ngoài, để biết chính xác mình đang mất tiền ở đâu</p>
+    <div class="incl">
+      <div class="incl-item">
+        <span class="incl-num">①</span>
+        <div class="incl-body">
+          <span class="incl-title">Bài chẩn đoán 6 mắt xích</span>
+          <span class="incl-desc">12 câu hỏi, ra điểm /100 và biểu đồ 6 mắt xích ngay</span>
+        </div>
+      </div>
+      <div class="incl-item">
+        <span class="incl-num">②</span>
+        <div class="incl-body">
+          <span class="incl-title">100 Prompt AI Bán hàng</span>
+          <span class="incl-desc">Copy-paste theo từng giai đoạn bán hàng</span>
+        </div>
+      </div>
+      <div class="incl-item">
+        <span class="incl-num">③</span>
+        <div class="incl-body">
+          <span class="incl-title">Checklist 6 mắt xích</span>
+          <span class="incl-desc">Tick từng bước cho đến khi hệ thống chạy trọn</span>
+        </div>
+      </div>
+      <div class="incl-item">
+        <span class="incl-num">④</span>
+        <div class="incl-body">
+          <span class="incl-title">30 mẫu tiêu đề + 5 mẫu email</span>
+          <span class="incl-desc">Content thu hút và follow-up khách hàng</span>
+        </div>
+      </div>
+      <div class="incl-item">
+        <span class="incl-num">⑤</span>
+        <div class="incl-body">
+          <span class="incl-title">Máy tính mục tiêu doanh thu</span>
+          <span class="incl-desc">Biết cần bán bao nhiêu đơn, đơn/ngày, lượt truy cập</span>
+        </div>
+      </div>
+      <div class="incl-item incl-item--vault">
+        <span class="incl-num">✦</span>
+        <div class="incl-body">
+          <span class="incl-title">Kho truy cập trọn đời</span>
+          <span class="incl-desc">Toàn bộ tài liệu & công cụ, tải về dùng mãi</span>
+        </div>
+      </div>
+    </div>
+    <p class="offer-closing"><b style="color:var(--paper)">99.000đ</b> không mua thêm kiến thức.<br>Chúng mua cho bạn <b style="color:var(--gold)">sự rõ ràng</b>: biết sửa đâu, bỏ đâu, làm gì tuần này.</p>
+    <p class="pay-warn" style="margin-top:var(--space-4);font-size:.9375rem;max-width:28rem;margin-left:auto;margin-right:auto;text-align:center"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b></p>
+    <p class="muted" style="margin-top:var(--space-2);font-size:.8125rem;max-width:28rem;margin-left:auto;margin-right:auto;text-align:center;line-height:1.55">Bấm mua = bạn đã đọc kỹ, hiểu rõ nội dung nhận được, và <b style="color:var(--paper)">đồng ý không hoàn tiền</b> sau khi chuyển khoản.</p>
+    <button class="cta-btn btn-pulse btn-pulse--float" onclick="openPay()">Tôi đã suy nghĩ kỹ · cho tôi bản chẩn đoán</button>
+  </div>
+
+  <footer>Bộ Chẩn Đoán 6 Mắt Xích · by Loc Tran</footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <button class="closex" onclick="closePay()" aria-label="Đóng">×</button>
+    <div id="infoStep">
+      <div class="step">Bước 1 / 2 · Gửi sản phẩm về đâu?</div>
+      <h3>Nhập email, mình gửi link ngay sau khi nhận tiền</h3>
+      <p class="pay-warn" style="font-size:14px;margin-bottom:10px;text-align:center"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b></p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:14px">Sản phẩm số, <b style="color:var(--paper)">không hoàn tiền</b>. Chỉ tiếp tục nếu bạn đã đọc kỹ và chắc chắn muốn mua.</p>
+      <label for="email">Email của bạn</label>
+      <input id="email" type="email" placeholder="email@ban.com" autocomplete="email">
+      <label for="name">Tên gọi (để mình xưng hô cho đúng)</label>
+      <input id="name" type="text" placeholder="Ví dụ: Linh, Anh Tuấn…">
+      <button class="confirm btn-pulse btn-pulse--gold" id="createBtn" onclick="createOrder()">Tiếp theo · thanh toán qua SePay →</button>
+    </div>
+    <div id="payStep" style="display:none">
+      <div class="step">Bước 2 / 2 · Thanh toán qua SePay</div>
+      <h3 id="payTitle">Cổng thanh toán SePay · 99.000đ</h3>
+      <p class="pay-warn" style="font-size:14px;text-align:center;margin-bottom:12px"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b><br><span style="color:var(--muted);font-size:13px;font-weight:400">Thanh toán xong không hoàn tiền.</span></p>
+
+      <div class="pay-pane on" id="panePg">
+        <div class="pg-badge"><span id="pgEnvBadge">SePay · bảo mật</span></div>
+        <ol class="pg-flow">
+          <li><span class="n">1</span><span>Bấm nút bên dưới → chuyển sang trang thanh toán SePay</span></li>
+          <li><span class="n">2</span><span>Quét QR ngân hàng hoặc chọn phương thức trên cổng SePay</span></li>
+          <li><span class="n">3</span><span>SePay xác nhận → tự mở kho sản phẩm + gửi email cho bạn</span></li>
+        </ol>
+        <button type="button" class="confirm btn-pulse btn-pulse--gold" id="pgPayBtn" onclick="submitPgCheckout()" style="width:100%;margin-top:0">
+          Thanh toán <span id="pgAmt">99.000đ</span> qua SePay →
+        </button>
+        <p style="color:var(--muted-dim);font-size:12px;text-align:center;margin-top:12px">Mã đơn: <b style="color:var(--paper)" id="pgCode">—</b></p>
+
+        <details class="alt-pay" id="altPayBlock">
+          <summary>Phương thức khác (VietQR · PayPal)</summary>
+          <div class="pay-tabs" id="altPayTabs">
+            <button type="button" id="tabVnd" onclick="setPayTab('vnd')">📱 VietQR</button>
+            <button type="button" id="tabPaypal" onclick="setPayTab('paypal')">🌐 PayPal</button>
+          </div>
+          <div class="pay-pane" id="paneVnd">
+            <p style="color:var(--muted);font-size:12px;text-align:center;margin-bottom:10px">Tự động xác nhận qua webhook SePay · Giữ nguyên nội dung CK</p>
+            <div class="qr">
+              <img id="qrImg" src="" alt="Mã QR VietQR thanh toán">
+              <div class="info" id="qrInfo"></div>
+            </div>
+            <p style="color:var(--gold);font-size:13px;text-align:center">Đang chờ ngân hàng xác nhận…</p>
+          </div>
+          <div class="pay-pane" id="panePaypal">
+            <p style="color:var(--muted);font-size:12px;text-align:center;margin-bottom:10px">Dành cho khách quốc tế · Quét QR PayPal bên dưới</p>
+            <div class="paypal-box">
+              <img id="paypalQr" src="PayPal_QR.JPG" alt="PayPal QR thanh toán">
+            </div>
+            <p style="text-align:center;font-size:15px;margin:8px 0"><b style="color:var(--gold)" id="paypalAmt">$3.90 USD</b></p>
+            <p style="text-align:center;font-size:13px;color:var(--muted)">Ghi chú / Note khi gửi: <b style="color:var(--paper)" id="paypalCode">...</b></p>
+            <div class="paypal-note">
+              PayPal <b>chưa tự động</b> mở sản phẩm như chuyển khoản VN. Sau khi gửi tiền, mình xác nhận và gửi link vào email của bạn trong vòng <b>24 giờ</b> (thường nhanh hơn).
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="pay-pane" id="paneQrOnly" style="display:none">
+        <div class="pay-tabs" id="qrOnlyTabs">
+          <button type="button" class="on" id="tabVndOnly" onclick="setPayTab('vnd')">📱 VietQR</button>
+          <button type="button" id="tabPaypalOnly" onclick="setPayTab('paypal')">🌐 PayPal</button>
+        </div>
+        <div class="pay-pane on" id="paneVndOnly">
+          <p style="color:var(--muted);font-size:12px;text-align:center;margin-bottom:10px">Tự động xác nhận qua webhook SePay</p>
+          <div class="qr">
+            <img id="qrImgOnly" src="" alt="Mã QR VietQR thanh toán">
+            <div class="info" id="qrInfoOnly"></div>
+          </div>
+          <p style="color:var(--gold);font-size:13px;text-align:center">Đang chờ ngân hàng xác nhận…</p>
+        </div>
+        <div class="pay-pane" id="panePaypalOnly">
+          <div class="paypal-box"><img id="paypalQrOnly" src="PayPal_QR.JPG" alt="PayPal QR"></div>
+          <p style="text-align:center;font-size:15px;margin:8px 0"><b style="color:var(--gold)" id="paypalAmtOnly">$3.90 USD</b></p>
+          <p style="text-align:center;font-size:13px;color:var(--muted)">Note: <b style="color:var(--paper)" id="paypalCodeOnly">...</b></p>
+        </div>
+      </div>
+    </div>
+    <div class="deliver" id="deliverStep">
+      <div class="step">Hoàn tất</div>
+      <div class="tick">✓</div>
+      <h3 id="dHi">Xong rồi!</h3>
+      <p>Tiền đã về, link sản phẩm cũng đã gửi vào email của bạn. Mở ngay, bài chẩn đoán chỉ mất 15 phút.</p>
+      <a class="access btn-pulse btn-pulse--float" id="accessLink" href="kho-qua.html" target="_blank">Bắt đầu chẩn đoán ngay →</a>
+      <p class="note">Lưu link này lại nhé. Dùng trọn đời, quay lại bất cứ lúc nào.</p>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+const API_URL = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.API_URL) || '';
+const AMOUNT  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.AMOUNT) || 99000;
+const PREFIX  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.ORDER_PREFIX) || 'CD6X';
+const PAYPAL_QR = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_QR) || 'PayPal_QR.JPG';
+const PAYPAL_USD= (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_USD) || 3.9;
+const URGENCY_SLOTS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.URGENCY_SLOTS)||20;
+const COUNTDOWN_HOURS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.COUNTDOWN_HOURS)||24;
+const PAYMENT_MODE=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.PAYMENT_MODE)||'pg';
+const SITE_URL=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.SITE_URL)||'';
+let pollTimer=null, currentCode=null, payTab='pg', pgCheckout=null, usePgPrimary=true;
+
+(function initUrgencyBar(){
+  const KEY='cd6x_countdown_end';
+  const slotsEl=document.getElementById('urgencySlots');
+  const priceEl=document.getElementById('urgencyPrice');
+  const barEl=document.getElementById('urgencyBar');
+  const cdH=document.getElementById('cdH');
+  const cdM=document.getElementById('cdM');
+  const cdS=document.getElementById('cdS');
+  if(!barEl||!cdH)return;
+
+  if(priceEl)priceEl.textContent=AMOUNT.toLocaleString('vi-VN')+'đ';
+  if(slotsEl)slotsEl.textContent=URGENCY_SLOTS;
+  const limitBadge=document.querySelector('.offer .limit');
+  if(limitBadge)limitBadge.textContent=URGENCY_SLOTS+' suất đầu · giá mở hàng';
+
+  function getEnd(){
+    let end=parseInt(localStorage.getItem(KEY)||'0',10);
+    if(!end||Date.now()>=end){
+      end=Date.now()+COUNTDOWN_HOURS*3600000;
+      localStorage.setItem(KEY,String(end));
+    }
+    return end;
+  }
+  let endAt=getEnd();
+
+  function pad(n){return String(n).padStart(2,'0')}
+  function tick(){
+    let left=Math.max(0,Math.floor((endAt-Date.now())/1000));
+    if(left<=0){
+      endAt=Date.now()+COUNTDOWN_HOURS*3600000;
+      localStorage.setItem(KEY,String(endAt));
+      left=COUNTDOWN_HOURS*3600;
+    }
+    const h=Math.floor(left/3600);
+    const m=Math.floor((left%3600)/60);
+    const s=left%60;
+    cdH.textContent=pad(h);
+    cdM.textContent=pad(m);
+    cdS.textContent=pad(s);
+    barEl.classList.toggle('urgency-bar--hot',left<3600);
+  }
+  tick();
+  setInterval(tick,1000);
+})();
+
+function setPayTab(tab){
+  payTab=tab;
+  const qrMode=!usePgPrimary;
+  if(qrMode){
+    document.getElementById('tabVndOnly').classList.toggle('on',tab==='vnd');
+    document.getElementById('tabPaypalOnly').classList.toggle('on',tab==='paypal');
+    document.getElementById('paneVndOnly').classList.toggle('on',tab==='vnd');
+    document.getElementById('paneVndOnly').style.display=tab==='vnd'?'block':'none';
+    document.getElementById('panePaypalOnly').classList.toggle('on',tab==='paypal');
+    document.getElementById('panePaypalOnly').style.display=tab==='paypal'?'block':'none';
+  }else{
+    document.getElementById('tabVnd').classList.toggle('on',tab==='vnd');
+    document.getElementById('tabPaypal').classList.toggle('on',tab==='paypal');
+    document.getElementById('paneVnd').classList.toggle('on',tab==='vnd');
+    document.getElementById('paneVnd').style.display=tab==='vnd'?'block':'none';
+    document.getElementById('panePaypal').classList.toggle('on',tab==='paypal');
+    document.getElementById('panePaypal').style.display=tab==='paypal'?'block':'none';
+  }
+  const titles={pg:'Cổng SePay · '+AMOUNT.toLocaleString('vi-VN')+'đ',vnd:'Quét mã · '+AMOUNT.toLocaleString('vi-VN')+'đ',paypal:'PayPal · $'+PAYPAL_USD.toFixed(2)};
+  document.getElementById('payTitle').textContent=titles[tab]||titles.pg;
+  if(tab==='vnd'&&currentCode&&!pollTimer)startPolling();
+  else if(tab!=='vnd'&&pollTimer){clearInterval(pollTimer);pollTimer=null;}
+}
+function submitPgCheckout(){
+  if(!pgCheckout||!pgCheckout.fields){alert('Chưa có dữ liệu thanh toán. Tạo đơn lại nhé.');return;}
+  const form=document.createElement('form');
+  form.method='POST';
+  form.action=pgCheckout.checkout_url;
+  form.acceptCharset='UTF-8';
+  Object.keys(pgCheckout.fields).forEach(function(k){
+    const inp=document.createElement('input');
+    inp.type='hidden';inp.name=k;inp.value=pgCheckout.fields[k];
+    form.appendChild(inp);
+  });
+  document.body.appendChild(form);
+  form.submit();
+}
+function openPay(){document.getElementById('modal').classList.add('on');document.body.style.overflow='hidden';}
+function closePay(){
+  document.getElementById('modal').classList.remove('on');
+  document.body.style.overflow='';
+  if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
+}
+async function createOrder(){
+  const email=document.getElementById('email').value.trim();
+  const name=document.getElementById('name').value.trim()||'bạn';
+  if(!email||!email.includes('@')){alert('Cho mình email nhé, để gửi link sản phẩm sau khi thanh toán.');return;}
+  if(!API_URL||API_URL.indexOf('THAY_BANG')!==-1){alert('Chưa cấu hình API_URL trong config.js. Deploy Google Apps Script trước nhé.');return;}
+  const btn=document.getElementById('createBtn');
+  btn.disabled=true;btn.textContent='Đang tạo đơn…';
+  try{
+    const siteParam=(SITE_URL&&SITE_URL.indexOf('YOUR-')===-1)?'&site_url='+encodeURIComponent(SITE_URL.replace(/\/$/,'')):'';
+    const url=API_URL+'?action=create&amount='+AMOUNT+'&prefix='+PREFIX+
+              '&email='+encodeURIComponent(email)+'&name='+encodeURIComponent(name)+siteParam;
+    const data=await (await fetch(url)).json();
+    if(!data.ok){throw new Error(data.error||'create_failed');}
+    currentCode=data.order_code;
+    pgCheckout=data.pg||null;
+    const qrText=AMOUNT.toLocaleString('vi-VN')+'đ · Nội dung: '+data.order_code;
+    document.getElementById('qrImg').src=data.qr_url;
+    document.getElementById('qrInfo').textContent=qrText;
+    document.getElementById('qrImgOnly').src=data.qr_url;
+    document.getElementById('qrInfoOnly').textContent=qrText;
+    document.getElementById('paypalQr').src=PAYPAL_QR;
+    document.getElementById('paypalQrOnly').src=PAYPAL_QR;
+    document.getElementById('paypalAmt').textContent='$'+PAYPAL_USD.toFixed(2)+' USD';
+    document.getElementById('paypalAmtOnly').textContent='$'+PAYPAL_USD.toFixed(2)+' USD';
+    document.getElementById('paypalCode').textContent=data.order_code;
+    document.getElementById('paypalCodeOnly').textContent=data.order_code;
+    const showPg=pgCheckout&&(PAYMENT_MODE==='pg'||PAYMENT_MODE==='both');
+    const showQr=PAYMENT_MODE==='qr'||PAYMENT_MODE==='both';
+    usePgPrimary=!!showPg;
+    document.getElementById('panePg').style.display=showPg?'block':'none';
+    document.getElementById('paneQrOnly').style.display=showPg?'none':'block';
+    document.getElementById('altPayBlock').style.display=showQr?'block':'none';
+    if(showPg){
+      document.getElementById('pgAmt').textContent=AMOUNT.toLocaleString('vi-VN')+'đ';
+      document.getElementById('pgCode').textContent=data.order_code;
+      const envBadge=document.getElementById('pgEnvBadge');
+      if(envBadge&&pgCheckout.env==='sandbox')envBadge.textContent='SePay Sandbox · test';
+      else if(envBadge)envBadge.textContent='SePay · bảo mật';
+    }
+    document.getElementById('infoStep').style.display='none';
+    document.getElementById('payStep').style.display='block';
+    if(showPg){payTab='pg';document.getElementById('payTitle').textContent='Cổng SePay · '+AMOUNT.toLocaleString('vi-VN')+'đ';}
+    else if(showQr){setPayTab('vnd');startPolling();}
+    else setPayTab('paypal');
+    btn.disabled=false;btn.textContent='Tiếp theo · thanh toán qua SePay →';
+  }catch(err){
+    alert('Chưa tạo được đơn thanh toán. Kiểm tra lại API_URL nhé.');
+    btn.disabled=false;btn.textContent='Tiếp theo · thanh toán qua SePay →';
+  }
+}
+function startPolling(){
+  if(payTab!=='vnd')return;
+  if(pollTimer)clearInterval(pollTimer);
+  pollTimer=setInterval(async()=>{
+    try{
+      const data=await (await fetch(API_URL+'?action=status&order_code='+currentCode)).json();
+      if(data.ok && data.status==='paid'){
+        clearInterval(pollTimer);pollTimer=null;
+        const name=document.getElementById('name').value.trim()||'bạn';
+        if(data.product_url){document.getElementById('accessLink').href=data.product_url;}
+        document.getElementById('payStep').style.display='none';
+        document.getElementById('deliverStep').style.display='block';
+        document.getElementById('dHi').textContent='Chào '+name+', sẵn sàng chưa?';
+      }
+    }catch(err){}
+  },3000);
+}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePay();});
+</script>
+</body>
+</html>

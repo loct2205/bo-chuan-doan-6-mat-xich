@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kho truy cập · Bộ Chẩn Đoán 6 Mắt Xích</title>
+<link rel="stylesheet" href="theme.css">
+<style>
+  .success-banner{
+    display:none;margin:0 auto var(--space-6);max-width:40rem;
+    background:linear-gradient(155deg,rgba(46,204,113,.15),rgba(46,204,113,.05));
+    border:1.5px solid rgba(46,204,113,.45);border-radius:var(--radius-lg);
+    padding:var(--space-5) var(--space-6);text-align:center;
+  }
+  .success-banner.on{display:block}
+  .success-banner h2{font-size:1.125rem;margin-bottom:var(--space-2);color:#6ee7a0}
+  .success-banner p{color:var(--muted);font-size:.9375rem;line-height:1.55}
+  .success-banner .wait{color:var(--gold);font-size:.875rem;margin-top:var(--space-3)}
+  .sub{margin:var(--space-4) auto 0;max-width:32rem;line-height:var(--leading)}
+  .total{
+    display:inline-block;margin-top:var(--space-5);
+    background:rgba(240,193,77,.1);border:1px solid rgba(240,193,77,.45);
+    border-radius:99px;padding:var(--space-3) var(--space-5);
+    font-size:.875rem;color:var(--paper-soft);line-height:1.5;
+  }
+  .total b{color:var(--gold)}
+  .drive-banner{
+    margin-top:var(--space-6);
+    background:linear-gradient(155deg,#173448 0%,var(--card) 55%,#0c1f2e 100%);
+    border:1.5px solid var(--gold);border-radius:var(--radius-lg);
+    padding:var(--space-6) var(--space-5);text-align:center;box-shadow:var(--shadow-offer);
+  }
+  .drive-banner p{color:var(--muted);font-size:.9375rem;margin-bottom:var(--space-4);line-height:1.6}
+  .drive-banner a.btn-gold{padding:var(--space-4) var(--space-6);font-size:1rem}
+  .gifts{display:flex;flex-direction:column;gap:var(--space-5);margin-top:var(--space-8)}
+  .gift{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
+    padding:var(--space-6);display:flex;gap:var(--space-5);align-items:flex-start;
+    box-shadow:var(--shadow-card);transition:border-color .2s,background .2s;
+  }
+  .gift:hover{border-color:var(--line-soft);background:var(--card-hover)}
+  .gift .badge{
+    flex:0 0 52px;height:52px;border-radius:var(--radius-sm);
+    background:var(--gold);color:var(--ink);
+    display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;
+  }
+  .gift .body{flex:1;min-width:0}
+  .gift h3{font-size:1.125rem;font-weight:800;margin-bottom:var(--space-2)}
+  .gift .worth{color:var(--gold);font-size:.8125rem;font-weight:700;margin-bottom:var(--space-3);letter-spacing:.02em}
+  .gift p{color:var(--muted);font-size:.9375rem;margin-bottom:var(--space-4);line-height:1.6}
+  .gift-actions{display:flex;flex-wrap:wrap;gap:var(--space-3);align-items:center}
+  .gift a.cta-btn{font-size:.875rem;font-weight:700;padding:var(--space-3) var(--space-5);min-height:44px}
+  .gift a.tool{background:linear-gradient(180deg,var(--good),var(--good-dark))}
+  .gift a.tool.btn-pulse{--pulse-color:var(--pulse-good)}
+  .gift a.cta-btn.alt{
+    background:transparent;border:1.5px solid var(--line);color:var(--paper-soft);
+    text-shadow:none;font-weight:700;min-height:44px;font-size:.875rem;
+    padding:var(--space-3) var(--space-5);
+  }
+  .gift a.cta-btn.alt:hover{
+    border-color:var(--gold);color:var(--paper);
+    transform:translateY(-2px) scale(1.05);
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  .closing{
+    text-align:center;margin-top:var(--space-10);
+    background:linear-gradient(155deg,#173448 0%,var(--card) 55%,#0c1f2e 100%);
+    border:1px solid var(--gold);border-radius:var(--radius-lg);
+    padding:var(--space-8) var(--space-6);box-shadow:var(--shadow-offer);
+  }
+  .closing h2{font-size:1.375rem;font-weight:800;margin-bottom:var(--space-3)}
+  .closing p{color:var(--muted);font-size:.9375rem;margin-bottom:var(--space-5);line-height:1.6}
+  .closing p b,.closing p em{color:var(--paper)}
+  .closing a.btn-gold{padding:var(--space-4) var(--space-8)}
+</style>
+</head>
+<body>
+<div class="success-banner" id="successBanner">
+  <h2>✓ Thanh toán thành công</h2>
+  <p id="successMsg">SePay đã nhận tiền. Link sản phẩm cũng được gửi vào email của bạn.</p>
+  <p class="wait" id="successWait" style="display:none">Đang xác nhận giao dịch… vui lòng đợi vài giây.</p>
+</div>
+<header>
+  <div class="eyebrow">Bạn đã vào đúng chỗ</div>
+  <h1>Chào bạn,<br>đây là <span class="hl">bản đồ</span> của bạn</h1>
+  <p class="sub">Bắt đầu từ bài chẩn đoán (15 phút). Sau đó mở kho tài liệu, tải toàn bộ công cụ về máy.</p>
+  <div class="total">① Chẩn đoán → ② Tải tài liệu → ③ Làm theo thứ tự</div>
+  <div class="drive-banner">
+    <p>Tất cả PDF + máy tính doanh thu nằm trong một kho truy cập trực tuyến.<br>Mở một lần, tải hoặc copy về máy dùng trọn đời.</p>
+    <a class="btn-gold btn-pulse btn-pulse--gold btn-pulse--float" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho tài liệu & công cụ →</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="gifts">
+
+    <div class="gift">
+      <div class="badge">①</div>
+      <div class="body">
+        <h3>Bài chẩn đoán 6 mắt xích</h3>
+        <div class="worth">Làm ngay, trước mọi thứ khác</div>
+        <p>12 câu hỏi thật. Trả lời thật, đừng tô điểm cho mình. Kết quả sẽ chỉ thẳng mắt xích nào đang kéo bạn xuống.</p>
+        <a class="cta-btn btn-good tool btn-pulse btn-pulse--good" href="readiness-scanner.html" target="_blank">Bắt đầu chẩn đoán →</a>
+      </div>
+    </div>
+
+    <div class="gift">
+      <div class="badge">②</div>
+      <div class="body">
+        <h3>100 Prompt AI Bán hàng</h3>
+        <div class="worth">Trong thư mục Drive · qua1</div>
+        <p>Bộ prompt copy-paste để AI giúp dựng sản phẩm, viết sale page, làm content và chốt đơn, chia theo từng giai đoạn bán hàng.</p>
+        <a class="cta-btn btn-pulse" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho · tải qua1 →</a>
+      </div>
+    </div>
+
+    <div class="gift">
+      <div class="badge">③</div>
+      <div class="body">
+        <h3>Checklist 6 mắt xích</h3>
+        <div class="worth">Trong thư mục Drive · qua2</div>
+        <p>6 mắt xích, từng bước nhỏ. Tick xong hết = hệ thống chạy trọn. 30 ngày sau quay lại bài ①, xem điểm tăng bao nhiêu.</p>
+        <a class="cta-btn btn-pulse" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho · tải qua2 →</a>
+      </div>
+    </div>
+
+    <div class="gift">
+      <div class="badge">④</div>
+      <div class="body">
+        <h3>30 mẫu tiêu đề + 5 mẫu email</h3>
+        <div class="worth">Trong thư mục Drive · qua4-5</div>
+        <p>Tiêu đề content kiểu "Không phải X, mà là Y" + email chuyển giao, nhắc thanh toán, follow-up khách cũ, trong cùng một file PDF.</p>
+        <a class="cta-btn btn-pulse" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho · tải qua4-5 →</a>
+      </div>
+    </div>
+
+    <div class="gift">
+      <div class="badge">⑤</div>
+      <div class="body">
+        <h3>Máy tính mục tiêu doanh thu</h3>
+        <div class="worth">Trong thư mục Drive · Google Docs</div>
+        <p>Nhập giá + mục tiêu → biết cần bao nhiêu đơn, đơn/ngày, lượt truy cập cần có. Không còn đoán "20 triệu = bao nhiêu suất".</p>
+        <div class="gift-actions">
+        <a class="cta-btn btn-good tool btn-pulse btn-pulse--good" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho · máy tính →</a>
+        <a class="cta-btn alt btn-pulse btn-quiet" href="Qua_tang/may-tinh-muc-tieu-doanh-thu.html" target="_blank" rel="noopener">Hoặc dùng bản web →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing">
+    <h2>Chẩn đoán xong mà muốn dựng hẳn hệ thống?</h2>
+    <p>Bộ này cho bạn biết <em>sửa ở đâu</em>. Khóa <b>AI Sales System Builder</b> (499.000đ) cầm tay dựng từng mảnh, 12 tháng học, không tự gia hạn.</p>
+    <a class="btn-gold btn-pulse btn-pulse--gold" href="presale-course.html" target="_blank">Xem khóa dựng hệ thống bằng AI →</a>
+  </div>
+
+  <footer>Bộ Chẩn Đoán 6 Mắt Xích · by Loc Tran</footer>
+</div>
+<script src="config.js"></script>
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  var order=q.get('order');
+  var payment=q.get('payment');
+  if(payment!=='success'||!order)return;
+
+  var banner=document.getElementById('successBanner');
+  var wait=document.getElementById('successWait');
+  banner.classList.add('on');
+  wait.style.display='block';
+
+  var API=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.API_URL)||'';
+  if(!API||API.indexOf('THAY_BANG')!==-1){wait.style.display='none';return;}
+
+  var tries=0;
+  var timer=setInterval(function(){
+    tries++;
+    fetch(API+'?action=status&order_code='+encodeURIComponent(order))
+      .then(function(r){return r.json();})
+      .then(function(data){
+        if(data.ok&&data.status==='paid'){
+          clearInterval(timer);
+          wait.style.display='none';
+          document.getElementById('successMsg').textContent=
+            'Mã đơn '+order+'. Bạn có thể bắt đầu chẩn đoán ngay bên dưới.';
+        }else if(tries>=20){
+          clearInterval(timer);
+          wait.textContent='IPN có thể chậm vài phút. Kiểm tra email hoặc tải lại trang sau.';
+        }
+      })
+      .catch(function(){});
+  },3000);
+})();
+</script>
+</body>
+</html>

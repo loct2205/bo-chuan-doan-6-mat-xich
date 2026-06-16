@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/sale-page.html" },
+    { "source": "/kho-qua", "destination": "/kho-qua.html" },
+    { "source": "/chuan-doan", "destination": "/readiness-scanner.html" },
+    { "source": "/thanh-toan/loi", "destination": "/payment-error.html" },
+    { "source": "/thanh-toan/huy", "destination": "/payment-cancel.html" },
+    { "source": "/thanh-toan/thanh-cong", "destination": "/payment-success.html" }
+  ]
+}
