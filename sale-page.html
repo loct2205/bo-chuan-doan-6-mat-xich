@@ -616,6 +616,7 @@ async function createOrder(){
     const data=await (await fetch(url)).json();
     if(!data.ok){throw new Error(data.error||'create_failed');}
     currentCode=data.order_code;
+    try{sessionStorage.setItem('cd6x_pending_order',currentCode);}catch(e){}
     document.getElementById('qrImg').src=data.qr_url+(data.qr_url.indexOf('?')>=0?'&':'?')+'_='+Date.now();
     document.getElementById('qrInfo').textContent='Quét bằng app ngân hàng';
     fillBankDetail(data);
@@ -631,24 +632,53 @@ async function createOrder(){
     btn.disabled=false;btn.textContent='Tiếp theo · chọn cách thanh toán →';
   }
 }
+function showPaidSuccess(productUrl){
+  if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
+  const name=document.getElementById('name').value.trim()||'bạn';
+  if(productUrl){document.getElementById('accessLink').href=productUrl;}
+  document.getElementById('payStep').style.display='none';
+  document.getElementById('deliverStep').style.display='block';
+  document.getElementById('dHi').textContent='Chào '+name+', sẵn sàng chưa?';
+  try{sessionStorage.removeItem('cd6x_pending_order');}catch(e){}
+}
+async function checkPaymentStatus(){
+  if(!currentCode||!API_URL)return false;
+  try{
+    const url=API_URL+'?action=status&order_code='+encodeURIComponent(currentCode)+'&_='+Date.now();
+    const res=await fetch(url,{cache:'no-store',redirect:'follow'});
+    const data=JSON.parse(await res.text());
+    if(data.ok && data.status==='paid'){
+      showPaidSuccess(data.product_url||'');
+      return true;
+    }
+  }catch(err){}
+  return false;
+}
 function startPolling(){
   if(payTab!=='vnd')return;
   if(pollTimer)clearInterval(pollTimer);
-  pollTimer=setInterval(async()=>{
-    try{
-      const data=await (await fetch(API_URL+'?action=status&order_code='+currentCode)).json();
-      if(data.ok && data.status==='paid'){
-        clearInterval(pollTimer);pollTimer=null;
-        const name=document.getElementById('name').value.trim()||'bạn';
-        if(data.product_url){document.getElementById('accessLink').href=data.product_url;}
-        document.getElementById('payStep').style.display='none';
-        document.getElementById('deliverStep').style.display='block';
-        document.getElementById('dHi').textContent='Chào '+name+', sẵn sàng chưa?';
-      }
-    }catch(err){}
-  },3000);
+  checkPaymentStatus();
+  pollTimer=setInterval(checkPaymentStatus,3000);
 }
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&currentCode&&payTab==='vnd')checkPaymentStatus();
+});
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePay();});
+(function resumePendingOrder(){
+  try{
+    const code=sessionStorage.getItem('cd6x_pending_order');
+    if(!code||!API_URL)return;
+    fetch(API_URL+'?action=status&order_code='+encodeURIComponent(code)+'&_='+Date.now(),{cache:'no-store'})
+      .then(r=>r.text()).then(t=>{
+        const data=JSON.parse(t);
+        if(data.ok&&data.status==='paid'){
+          currentCode=code;
+          showPaidSuccess(data.product_url||'');
+          openPay();
+        }
+      }).catch(()=>{});
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
