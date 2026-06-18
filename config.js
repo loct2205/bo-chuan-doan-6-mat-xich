@@ -9,6 +9,7 @@ var SITE_CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbzOnz00mRtqbMnSqlWFJ2lgZsAZbN5d5sEf39zL2VK1sy3FO14g0Z1JX1UsBCqszqnW0w/exec',
   SITE_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app',
   SEPAY_WEBHOOK_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app/api/sepay-webhook',
+  STATUS_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app/api/order-status',
 
   AMOUNT: 9000,
   ORDER_PREFIX: 'DH',

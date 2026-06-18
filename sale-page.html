@@ -487,7 +487,7 @@
           <div class="info" id="qrInfo"></div>
         </div>
         <div class="bank-detail" id="bankDetail"></div>
-        <p class="wait-line">⏳ Đang chờ xác nhận chuyển khoản…</p>
+        <p class="wait-line" id="waitLine">⏳ Đang chờ xác nhận chuyển khoản…</p>
       </div>
 
       <div class="pay-pane" id="panePaypal">
@@ -526,7 +526,8 @@ const PAYPAL_USD= (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_USD)
 const URGENCY_SLOTS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.URGENCY_SLOTS)||20;
 const COUNTDOWN_HOURS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.COUNTDOWN_HOURS)||24;
 const SITE_URL=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.SITE_URL)||'';
-let pollTimer=null, currentCode=null, payTab='vnd';
+const STATUS_URL=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.STATUS_URL)||API_URL;
+let pollTimer=null, currentCode=null, payTab='vnd', pollCount=0;
 
 (function initUrgencyBar(){
   const KEY='cd6x_countdown_end';
@@ -641,24 +642,40 @@ function showPaidSuccess(productUrl){
   document.getElementById('dHi').textContent='Chào '+name+', sẵn sàng chưa?';
   try{sessionStorage.removeItem('cd6x_pending_order');}catch(e){}
 }
+function statusCheckUrl(code){
+  if(STATUS_URL!==API_URL){
+    return STATUS_URL+'?order_code='+encodeURIComponent(code)+'&_='+Date.now();
+  }
+  return API_URL+'?action=status&order_code='+encodeURIComponent(code)+'&_='+Date.now();
+}
 async function checkPaymentStatus(){
-  if(!currentCode||!API_URL)return false;
+  if(!currentCode)return false;
+  pollCount++;
+  const waitEl=document.getElementById('waitLine');
+  if(waitEl){
+    waitEl.textContent='⏳ Đang kiểm tra thanh toán… (lần '+pollCount+')';
+  }
   try{
-    const url=API_URL+'?action=status&order_code='+encodeURIComponent(currentCode)+'&_='+Date.now();
-    const res=await fetch(url,{cache:'no-store',redirect:'follow'});
+    const res=await fetch(statusCheckUrl(currentCode),{cache:'no-store',redirect:'follow'});
     const data=JSON.parse(await res.text());
     if(data.ok && data.status==='paid'){
       showPaidSuccess(data.product_url||'');
       return true;
     }
-  }catch(err){}
+    if(waitEl){
+      waitEl.textContent='⏳ Đang chờ ngân hàng xác nhận… (thường 10–60 giây sau khi chuyển)';
+    }
+  }catch(err){
+    if(waitEl)waitEl.textContent='⏳ Đang thử kết nối lại…';
+  }
   return false;
 }
 function startPolling(){
   if(payTab!=='vnd')return;
   if(pollTimer)clearInterval(pollTimer);
+  pollCount=0;
   checkPaymentStatus();
-  pollTimer=setInterval(checkPaymentStatus,3000);
+  pollTimer=setInterval(checkPaymentStatus,2000);
 }
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible'&&currentCode&&payTab==='vnd')checkPaymentStatus();
@@ -667,8 +684,8 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
 (function resumePendingOrder(){
   try{
     const code=sessionStorage.getItem('cd6x_pending_order');
-    if(!code||!API_URL)return;
-    fetch(API_URL+'?action=status&order_code='+encodeURIComponent(code)+'&_='+Date.now(),{cache:'no-store'})
+    if(!code)return;
+    fetch(statusCheckUrl(code),{cache:'no-store'})
       .then(r=>r.text()).then(t=>{
         const data=JSON.parse(t);
         if(data.ok&&data.status==='paid'){
