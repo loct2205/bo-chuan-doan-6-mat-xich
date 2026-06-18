@@ -29,6 +29,11 @@
 <style>
   :root{--urgency-h:58px}
   body.has-urgency-bar{padding-top:var(--urgency-h)}
+  body.modal-open{padding-top:0}
+  body.modal-open .urgency-bar{
+    opacity:0;visibility:hidden;pointer-events:none;
+    transform:translateY(-100%);transition:opacity .2s,transform .25s,visibility .2s;
+  }
   @media(max-width:640px){:root{--urgency-h:84px}}
 
   .urgency-bar{
@@ -75,6 +80,9 @@
     font-size:.875rem;color:var(--paper);line-height:1.4;text-align:center;font-weight:500;
   }
   .urgency-bar__msg b{color:var(--gold);font-weight:800}
+  .price-was{color:var(--muted-dim);text-decoration:line-through;font-weight:600}
+  .urgency-bar__msg .price-pair{white-space:nowrap}
+  .urgency-bar__msg .price-pair .price-was{font-size:.8125rem;margin-right:3px}
   .urgency-bar__timer{
     display:flex;align-items:center;gap:5px;flex-shrink:0;
     background:rgba(6,18,32,.5);border:1px solid rgba(240,193,77,.35);
@@ -145,12 +153,17 @@
   }
 
   header{text-align:center;padding:var(--space-10) var(--space-5) var(--space-8)}
-  .lede{margin:0 auto var(--space-8);line-height:var(--leading)}
+  .lede{margin:0 auto;line-height:1.65;text-wrap:balance;max-width:32rem}
+  .lede--hook{margin-bottom:var(--space-3)}
+  .lede--offer{margin-bottom:var(--space-8)}
+  .lede .nobreak{white-space:nowrap}
+  .lede b{white-space:nowrap}
   .hero-cta{margin:var(--space-6) auto 0;max-width:28rem}
   .cta-sub{
     display:block;color:var(--paper-soft);font-size:.875rem;
     margin-top:var(--space-4);line-height:1.65;letter-spacing:.015em;
   }
+  .cta-sub .price-was{font-size:.8125rem;margin-right:3px}
 
   .mock{
     background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);
@@ -223,6 +236,7 @@
     padding:var(--space-10) var(--space-8);margin:var(--space-12) 0 0;text-align:center;
     box-shadow:var(--shadow-offer);
   }
+  #mua{scroll-margin-top:calc(var(--urgency-h) + var(--space-4))}
   .limit{display:inline-block;background:var(--signal);color:#fff;font-size:.6875rem;font-weight:800;letter-spacing:.08em;padding:6px 16px;border-radius:99px;margin-bottom:var(--space-4);text-transform:uppercase}
   .price{display:flex;align-items:baseline;justify-content:center;gap:var(--space-3);margin:var(--space-2) 0}
   .price .now{font-size:2.875rem;font-weight:800;color:var(--gold);line-height:1}
@@ -254,37 +268,155 @@
   }
   .incl-item--vault .incl-num{background:var(--gold);color:var(--ink);border-color:var(--gold)}
   .incl-item--vault .incl-title{color:var(--gold)}
-  .offer .cta-btn{width:100%;max-width:32rem;margin-top:var(--space-6)}
+  .offer-buy-wrap{margin-top:var(--space-6);display:flex;flex-direction:column;align-items:center;gap:var(--space-3)}
+  .offer-buy{
+    width:100%;max-width:22rem;min-height:60px;padding:var(--space-4) var(--space-8);
+    border:none;border-radius:999px;cursor:pointer;font-family:inherit;
+    background:linear-gradient(180deg,#f8d76a 0%,var(--gold) 45%,var(--gold-dark) 100%);
+    color:var(--ink);font-weight:800;
+    box-shadow:
+      0 6px 28px rgba(240,193,77,.45),
+      0 2px 0 rgba(255,255,255,.25) inset,
+      0 -2px 0 rgba(0,0,0,.12) inset;
+    border:2px solid rgba(255,255,255,.22);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    line-height:1.25;position:relative;overflow:visible;
+    transition:transform .22s cubic-bezier(.34,1.4,.64,1),filter .2s ease,box-shadow .2s ease;
+  }
+  .offer-buy__main{font-size:1.125rem;letter-spacing:-.01em}
+  .offer-buy__sub{font-size:.75rem;font-weight:700;opacity:.85;letter-spacing:.02em}
+  .offer-buy__sub .price-was{font-size:.6875rem;margin-right:3px;opacity:.75}
+  .offer-closing .price-was{font-size:.9375rem;margin-right:4px}
+  .offer-buy:hover{
+    animation:none!important;
+    transform:translateY(-4px) scale(1.04)!important;
+    filter:brightness(1.06);
+    box-shadow:0 12px 36px rgba(240,193,77,.55),0 2px 0 rgba(255,255,255,.3) inset;
+  }
+  .offer-buy:active{transform:translateY(-1px) scale(1.02)!important}
+  .offer-buy.offer-buy--focus{
+    animation:offer-buy-glow .9s ease-out 2;
+    box-shadow:0 0 0 4px rgba(240,193,77,.35),0 12px 36px rgba(240,193,77,.55);
+  }
+  @keyframes offer-buy-glow{
+    0%,100%{box-shadow:0 6px 28px rgba(240,193,77,.45),0 0 0 0 rgba(240,193,77,0)}
+    50%{box-shadow:0 12px 40px rgba(240,193,77,.65),0 0 0 10px rgba(240,193,77,.2)}
+  }
   .offer-closing{margin-top:var(--space-5);font-size:.9375rem;color:var(--muted);line-height:1.6}
   .pay-warn{color:var(--paper)!important;line-height:1.55}
 
   .section-cta{text-align:center;margin:var(--space-8) 0}
 
-  .modal{display:none;position:fixed;inset:0;background:rgba(4,10,18,.9);backdrop-filter:blur(6px);z-index:50;align-items:center;justify-content:center;padding:var(--space-5)}
+  .modal{display:none;position:fixed;inset:0;background:rgba(4,10,18,.92);backdrop-filter:blur(8px);z-index:60;align-items:center;justify-content:center;padding:var(--space-4)}
   .modal.on{display:flex}
-  .box{background:var(--card);border:1px solid var(--gold);border-radius:var(--radius-lg);max-width:28rem;width:100%;padding:var(--space-8) var(--space-6);max-height:92vh;overflow:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)}
+  .box{
+    background:var(--card);border:1px solid var(--gold);border-radius:var(--radius-lg);
+    max-width:27rem;width:100%;padding:var(--space-6) var(--space-5);
+    max-height:calc(100dvh - var(--space-8));overflow-y:auto;overflow-x:hidden;
+    box-shadow:0 24px 64px rgba(0,0,0,.5);
+    scrollbar-width:thin;scrollbar-color:rgba(240,193,77,.35) transparent;
+  }
+  .box::-webkit-scrollbar{width:4px}
+  .box::-webkit-scrollbar-thumb{background:rgba(240,193,77,.35);border-radius:99px}
+  .box::-webkit-scrollbar-track{background:transparent}
   .box h3{font-size:1.375rem;font-weight:800;margin-bottom:var(--space-2)}
-  .box .step{color:var(--muted-dim);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:var(--space-4)}
-  .qr{background:#fff;border-radius:var(--radius-sm);padding:var(--space-5);text-align:center;margin:var(--space-3) 0 var(--space-4);min-height:168px;display:flex;flex-direction:column;justify-content:center}
-  .qr img{width:220px;max-width:100%;margin:0 auto;display:block}
-  .qr .info{color:var(--ink);font-size:.875rem;margin-top:var(--space-3);font-weight:600;line-height:1.45}
+  .modal-step{color:var(--muted-dim);font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:var(--space-2);text-align:center;text-wrap:balance}
+  .modal-title{font-size:1.125rem;font-weight:800;line-height:1.35;margin-bottom:var(--space-2);text-align:center;text-wrap:balance}
+  .modal-desc{color:var(--muted);font-size:.8125rem;line-height:1.6;margin:0 0 var(--space-3);text-align:center;text-wrap:balance}
+  .modal-footnote{font-size:.75rem;color:var(--muted-dim);line-height:1.5;text-align:center;margin-bottom:var(--space-3);text-wrap:balance}
+  .modal-footnote b{color:var(--paper);font-weight:600}
+  .modal-progress{display:flex;justify-content:center;gap:6px;margin:0 0 var(--space-4)}
+  .modal-progress span{width:2rem;height:3px;border-radius:99px;background:var(--line);transition:background .25s}
+  .modal-progress span.on{background:var(--gold)}
+  .modal-progress span.done{background:rgba(240,193,77,.4)}
+  .pay-tabs{margin-bottom:var(--space-3)}
+  .qr{background:#fff;border-radius:var(--radius-sm);padding:var(--space-3);text-align:center;margin:0 0 var(--space-3);display:flex;flex-direction:column;justify-content:center;align-items:center}
+  .qr img{width:168px;max-width:100%;margin:0 auto;display:block}
+  .qr .info{color:var(--ink);font-size:.8125rem;margin-top:var(--space-2);font-weight:600;line-height:1.4}
   .bank-detail{
     background:rgba(6,18,32,.35);border:1px solid var(--line);border-radius:var(--radius-sm);
-    padding:var(--space-4);margin-top:var(--space-3);text-align:left;font-size:.8125rem;
-    color:var(--muted);line-height:1.65;
+    padding:var(--space-3);margin-top:0;text-align:left;font-size:.8125rem;
+    color:var(--muted);line-height:1.6;
   }
   .bank-detail b{color:var(--paper)}
   .bank-detail .code{color:var(--gold);font-size:.9375rem;letter-spacing:.04em}
-  .wait-line{color:var(--gold);font-size:.875rem;text-align:center;margin-top:var(--space-4)}
-  .confirm{width:100%;margin-top:var(--space-5)}
+  .wait-line{
+    color:var(--gold);font-size:.8125rem;text-align:center;margin-top:var(--space-3);
+    display:flex;align-items:center;justify-content:center;gap:var(--space-3);
+  }
+  .wait-line__spin{
+    width:18px;height:18px;flex-shrink:0;
+    border:2px solid rgba(240,193,77,.25);border-top-color:var(--gold);
+    border-radius:50%;animation:wait-spin .75s linear infinite;
+  }
+  @keyframes wait-spin{to{transform:rotate(360deg)}}
+  .paypal-box{padding:var(--space-3);margin:0 0 var(--space-3)}
+  .deliver__checks{margin-bottom:var(--space-4);gap:var(--space-1)}
+  .deliver__checks li{padding:var(--space-2) var(--space-3);font-size:.8125rem}
+  .confirm{width:100%;margin-top:var(--space-4)}
   .confirm:disabled{opacity:.55;cursor:wait}
   .closex{float:right;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;padding:var(--space-2);margin:-var(--space-2);border-radius:8px}
   .closex:hover{color:var(--paper);background:rgba(255,255,255,.06)}
-  .deliver{display:none;text-align:center}
-  .deliver .tick{width:68px;height:68px;border-radius:50%;background:var(--good);color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4)}
-  .deliver p{color:var(--muted);font-size:.9375rem;margin-bottom:var(--space-5);line-height:1.55}
-  .access{width:100%;display:flex}
-  .note{font-size:.8125rem;color:var(--muted-dim);margin-top:var(--space-4);line-height:1.5}
+  .deliver{display:none;text-align:center;position:relative;padding:0}
+  .deliver__glow{
+    position:absolute;inset:-20% -10% auto;height:55%;
+    background:radial-gradient(ellipse at 50% 0%,rgba(46,204,113,.12) 0%,rgba(240,193,77,.06) 45%,transparent 72%);
+    pointer-events:none;z-index:0;
+  }
+  .deliver > *:not(.deliver__glow){position:relative;z-index:1}
+  .deliver__icon-wrap{position:relative;width:72px;height:72px;margin:0 auto var(--space-3)}
+  .deliver__ring{
+    position:absolute;inset:0;border-radius:50%;
+    border:2px solid rgba(46,204,113,.35);
+    animation:deliver-ring 2.4s ease-out infinite;
+  }
+  @keyframes deliver-ring{
+    0%{transform:scale(.92);opacity:.9}
+    70%,100%{transform:scale(1.35);opacity:0}
+  }
+  .deliver .tick{
+    width:72px;height:72px;border-radius:50%;
+    background:linear-gradient(145deg,#3ddc84 0%,#22a858 100%);
+    color:#fff;font-size:1.75rem;font-weight:800;
+    display:flex;align-items:center;justify-content:center;margin:0;
+    box-shadow:0 12px 32px rgba(46,204,113,.35),inset 0 1px 0 rgba(255,255,255,.25);
+    animation:deliver-pop .55s cubic-bezier(.34,1.4,.64,1) both;
+  }
+  @keyframes deliver-pop{
+    from{transform:scale(.5);opacity:0}
+    to{transform:scale(1);opacity:1}
+  }
+  .deliver__title{
+    font-size:1.25rem;font-weight:800;line-height:1.35;margin-bottom:var(--space-2);
+    letter-spacing:-.02em;
+  }
+  .deliver__name{color:var(--gold)}
+  .deliver__checks{
+    list-style:none;margin:0 auto var(--space-5);padding:0;max-width:20rem;
+    display:flex;flex-direction:column;gap:var(--space-2);text-align:left;
+  }
+  .deliver__checks li{
+    display:flex;align-items:center;gap:var(--space-3);
+    font-size:.8125rem;color:var(--muted);line-height:1.45;
+    padding:var(--space-3) var(--space-4);
+    background:rgba(6,18,32,.45);border:1px solid var(--line);
+    border-radius:var(--radius-sm);
+  }
+  .deliver__checks .ico{
+    flex:0 0 1.75rem;height:1.75rem;border-radius:8px;
+    background:rgba(240,193,77,.12);border:1px solid rgba(240,193,77,.3);
+    display:flex;align-items:center;justify-content:center;font-size:.875rem;
+  }
+  .deliver .access{
+    width:100%;display:flex;justify-content:center;align-items:center;
+    min-height:52px;font-size:1rem;font-weight:800;
+    border-radius:var(--radius-sm);text-decoration:none;
+  }
+  .deliver__note{
+    font-size:.75rem;color:var(--muted-dim);margin-top:var(--space-4);
+    line-height:1.5;
+  }
+  .box--success{max-width:26rem;border-color:rgba(46,204,113,.45)}
   .pay-tabs{display:flex;gap:var(--space-2);margin-bottom:var(--space-4)}
   .pay-tabs button{flex:1;min-height:44px;padding:var(--space-3);border-radius:var(--radius-sm);border:1.5px solid var(--line);background:var(--ink);color:var(--muted);font-family:inherit;font-size:.8125rem;font-weight:700;cursor:pointer;line-height:1.3}
   .pay-tabs button.on{border-color:var(--gold);color:var(--gold);background:rgba(240,193,77,.1)}
@@ -308,7 +440,7 @@
   <div class="urgency-bar__inner">
     <span class="urgency-bar__tag">Giá mở hàng</span>
     <p class="urgency-bar__msg">
-      <b id="urgencyPrice">99.000đ</b> · còn <b id="urgencySlots">20</b> suất · kết thúc sau
+      Chỉ <span class="price-pair"><span class="price-was" id="urgencyWas">249.000đ</span> <b id="urgencyPrice">99.000đ</b></span> · còn <b id="urgencySlots">20</b> suất · ưu đãi hết sau
     </p>
     <div class="urgency-bar__timer" id="urgencyTimer" aria-live="polite" aria-atomic="true">
       <span class="urgency-bar__unit"><b id="cdH">00</b><small>giờ</small></span>
@@ -317,95 +449,91 @@
       <span class="urgency-bar__sep">:</span>
       <span class="urgency-bar__unit"><b id="cdS">00</b><small>giây</small></span>
     </div>
-    <a href="#mua" class="urgency-bar__cta">Mua ngay →</a>
+    <a href="#mua" class="urgency-bar__cta">Chốt suất →</a>
   </div>
 </div>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Dành cho người bán hàng online</div>
-    <h1>Có khách inbox…<br>mà tiền vẫn <span class="hl">không về túi</span>?</h1>
-    <p class="lede">Không phải bạn thiếu cố gắng. Có thể bạn đang sửa sai chỗ. <b style="color:var(--paper)">12 câu hỏi, 15 phút</b> để biết mắt xích nào đang rò tiền, kèm <b style="color:var(--paper)">bộ công cụ triển khai</b> hành động ngay sau chẩn đoán.</p>
+    <div class="eyebrow">Dành cho người bán online · đã có khách, chưa ra tiền đủ</div>
+    <h1>Có khách inbox…<br>mà cuối tháng vẫn <span class="hl">không khác mấy</span>?</h1>
+    <p class="lede lede--hook">Không phải bạn lười. Có thể bạn đang sửa sai mắt xích.</p>
+    <p class="lede lede--offer"><b>12 câu hỏi · 15 phút</b> để biết tiền đang rò <span class="nobreak">ở đâu</span>, kèm <b>bộ công cụ</b> sửa ngay tuần này.</p>
     <div class="hero-cta">
-      <a href="#mua" class="cta-btn btn-pulse btn-pulse--float">Cho tôi biết chỗ đang rò tiền · 99.000đ</a>
-      <span class="cta-sub">Chẩn đoán + bộ công cụ triển khai · Một lần mua, dùng trọn đời</span>
+      <a href="#mua" class="cta-btn btn-pulse btn-pulse--float">Cho tôi biết chỗ đang rò tiền</a>
+      <span class="cta-sub"><span class="price-was" id="heroWas">249.000đ</span> <b style="color:var(--gold);font-weight:700" id="heroNow">99.000đ</b> · chẩn đoán + kho công cụ · một lần mua · truy cập trọn đời</span>
     </div>
     <div class="mock">
-      <span class="demo-tag">Xem trước · không phải kết quả thật</span>
-      <h3>Sau khi mua, bạn làm bài chẩn đoán và nhận kết quả kiểu này:</h3>
+      <span class="demo-tag">Minh họa kết quả</span>
+      <h3>Sau khi mua, bạn làm bài chẩn đoán và thấy bức tranh thế này:</h3>
       <div class="ring">72</div>
-      <p>Điểm /100 cho cả hệ thống · biểu đồ 6 mắt xích · mắt xích đỏ = đang yếu nhất · gợi ý 3 việc sửa trước</p>
-      <p class="fine">Số <b style="color:var(--gold)">72</b> chỉ là ví dụ minh họa. Điểm thật của bạn ra sau khi trả lời 12 câu trong tool chẩn đoán.</p>
+      <p>Điểm /100 · biểu đồ 6 mắt xích · mắt đỏ = đang yếu nhất · gợi ý 3 việc ưu tiên sửa trước</p>
+      <p class="fine">Số <b style="color:var(--gold)">72</b> chỉ là ví dụ. Điểm thật của bạn ra sau 12 câu trả lời.</p>
     </div>
   </header>
 
-  <h2>Bạn có đang ở đây không?</h2>
+  <h2>Có phải bạn đang ở đây?</h2>
   <ul class="pain">
-    <li>Đăng bài đều, inbox có người hỏi, nhưng cuối tháng nhìn sổ vẫn thấy… chẳng khác mấy.</li>
-    <li>Mỗi sáng mở điện thoại tự hỏi <em>"hôm nay làm gì đây?"</em>, làm nhiều việc mà không chắc việc nào thực sự ra tiền.</li>
-    <li>Có sản phẩm, có trang, có khách, nhưng mọi thứ rời rạc. Bán vẫn phải nhắn tay, gửi link, nhắc thanh toán… mệt mà không scale được.</li>
+    <li>Đăng đều, inbox có người hỏi, cuối tháng mở sổ vẫn… im lặng.</li>
+    <li>Mỗi sáng tự hỏi <em>"hôm nay làm gì?"</em>, bận cả ngày mà không chắc việc nào thật sự ra tiền.</li>
+    <li>Có sản phẩm, có trang, có khách, nhưng bán vẫn tay: nhắn, gửi link, nhắc CK. Mệt mà không lớn được.</li>
   </ul>
 
-  <h2>Không cần thêm khóa học. Cần biết sửa cái gì trước.</h2>
+  <h2>Bạn không cần thêm video. Cần biết sửa cái gì trước.</h2>
   <div class="benefits">
     <div class="ben"><div class="chk">1</div><div>
-      <h3>Ngừng đoán. Nhìn thấy bằng con số.</h3>
-      <p>Điểm /100 cho cả hệ thống và từng mắt xích riêng. Lần đầu tiên bạn biết chính xác mình đang ở đâu, không phải "cảm giác là ổn".</p></div></div>
+      <h3>Nhìn thấy bằng số, không còn đoán</h3>
+      <p>Điểm /100 cho cả hệ thống và từng mắt xích. Lần đầu bạn biết mình đang ở đâu, thay vì "cảm giác là ổn".</p></div></div>
     <div class="ben"><div class="chk">2</div><div>
-      <h3>Biết tiền đang chảy ra lỗ hổng nào</h3>
-      <p>6 mắt xích: Sản phẩm · Trang bán · Thanh toán · Chuyển giao · Thu hút · Follow-up. Mắt xích yếu nhất được đánh dấu. Đó là nơi bạn đang để tiền rơi vãi.</p></div></div>
+      <h3>Biết tiền đang rò ở mắt xích nào</h3>
+      <p>6 mắt xích: Sản phẩm · Trang bán · Thanh toán · Chuyển giao · Thu hút · Follow-up. Mắt yếu nhất được đánh dấu. Đó là nơi cần sửa trước.</p></div></div>
     <div class="ben"><div class="chk">3</div><div>
-      <h3>Nhận bộ công cụ, không chỉ biết vấn đề</h3>
-      <p>Prompt AI, checklist 6 mắt xích, mẫu tiêu đề, email, máy tính doanh thu. Gom trong một kho tài liệu trực tuyến, tải về dùng ngay.</p></div></div>
+      <h3>Có công cụ sửa, không chỉ biết vấn đề</h3>
+      <p>Prompt AI, checklist, mẫu tiêu đề & email, máy tính doanh thu. Gom trong một kho, tải về và dùng ngay.</p></div></div>
     <div class="ben"><div class="chk">4</div><div>
-      <h3>30 ngày sau, quét lại và thấy mình tiến bộ</h3>
-      <p>Sửa xong một mắt xích, làm lại bài chẩn đoán. Điểm tăng = bạn đi đúng hướng. Đó là cảm giác mà "xem thêm video" không cho bạn.</p></div></div>
+      <h3>30 ngày sau, làm lại và thấy điểm tăng</h3>
+      <p>Sửa xong một mắt xích → quét lại bài chẩn đoán. Điểm tăng = bạn đi đúng hướng. Cảm giác mà thêm 10 video không cho.</p></div></div>
   </div>
 
   <div class="section-cta">
-    <a href="#mua" class="cta-btn btn-pulse">Tôi muốn biết mình đang sai ở đâu</a>
+    <a href="#mua" class="cta-btn btn-pulse">Tôi muốn biết mình đang rò ở đâu</a>
   </div>
 
-  <h2>Những người đã dùng nói gì</h2>
+  <h2>Người dùng đầu tiên</h2>
   <div class="proof">
     <div class="review">
       <div class="stars">★★★★★</div>
-      <p>[Chỗ này điền nhận xét thật của khách đầu tiên sau khi họ dùng tool.]</p>
-      <div class="who">Tên khách, nghề nghiệp</div>
+      <p>Đang mở bán. Mình sẽ cập nhật nhận xét thật từ khách đầu tiên ngay khi có. Không dùng review giả.</p>
+      <div class="who">Loc Tran · người làm bộ chẩn đoán</div>
     </div>
-    <div class="review">
-      <div class="stars">★★★★★</div>
-      <p>[Một nhận xét thật khác, tốt nhất kèm ảnh chụp màn hình kết quả họ nhận được.]</p>
-      <div class="who">Tên khách, nghề nghiệp</div>
-    </div>
-    <p class="proof-note">Đang chờ review từ khách đầu tiên, sẽ cập nhật ngay khi có. Không dùng đánh giá giả.</p>
+    <p class="proof-note">Bạn là một trong 20 suất đầu? Sau khi dùng xong, nhắn mình. Mình trích dẫn (có thể kèm ảnh kết quả) nếu bạn đồng ý.</p>
   </div>
 
-  <h2>Đọc kỹ phần này trước khi mua</h2>
+  <h2>Đọc kỹ trước khi mua</h2>
   <div class="policy-box">
     <div class="ic">!</div>
     <div>
-      <h3 style="color:var(--paper)">Hãy suy nghĩ thật kỹ. Mua xong không hoàn tiền</h3>
-      <p>Đây là sản phẩm số. Bạn nhận link ngay sau khi chuyển khoản, và <b style="color:var(--paper)">mình không hoàn tiền</b> trong mọi trường hợp: đã mở hay chưa mở, đã dùng hay chưa dùng, đổi ý hay không hài lòng.</p>
-      <p class="warn" style="margin-top:10px"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b> Đừng chuyển khoản khi bạn còn phân vân.</p>
-      <p style="margin-top:10px">Mình khuyên bạn <b style="color:var(--paper)">đọc lại toàn bộ trang này</b>, xem bạn có thực sự cần bài chẩn đoán + bộ công cụ triển khai không. Nếu chưa chắc, <b style="color:var(--paper)">đừng mua vội</b>. Nhắn mình trước, hỏi hết mọi thứ, rồi hãy quyết.</p>
+      <h3 style="color:var(--paper)">Sản phẩm số · thanh toán xong không hoàn tiền</h3>
+      <p>Bạn nhận link ngay sau khi chuyển khoản. Mình <b style="color:var(--paper)">không hoàn tiền</b> trong mọi trường hợp: đã mở hay chưa, đã dùng hay chưa, đổi ý hay không hài lòng.</p>
+      <p class="warn" style="margin-top:10px">Chỉ chuyển khoản khi bạn <b>chắc chắn</b> cần bài chẩn đoán + bộ công cụ này lúc này.</p>
+      <p style="margin-top:10px">Chưa chắc? <b style="color:var(--paper)">Đọc lại trang này</b> hoặc nhắn mình hỏi hết, rồi hãy quyết. Đừng mua khi còn phân vân.</p>
       <ul>
-        <li><b style="color:var(--paper)">Bộ 99.000đ:</b> truy cập trọn đời, gồm chẩn đoán + kho tài liệu & công cụ đi kèm</li>
-        <li><b style="color:var(--paper)">Khóa 499.000đ</b> (nếu bạn muốn đi tiếp): 12 tháng học, không tự gia hạn, cũng không hoàn tiền</li>
-        <li>Chỉ thanh toán khi bạn <b style="color:var(--paper)">chắc chắn</b> đây là thứ mình cần lúc này</li>
+        <li><b style="color:var(--paper)">Bộ <span class="price-was" id="policyWas">249.000đ</span> <span id="policyNow">99.000đ</span>:</b> truy cập trọn đời, gồm chẩn đoán + kho tài liệu & công cụ</li>
+        <li><b style="color:var(--paper)">Khóa 499.000đ</b> (tuỳ chọn): 12 tháng học dựng hệ thống, không tự gia hạn, không hoàn tiền</li>
+        <li>Bấm mua = bạn đã hiểu và <b style="color:var(--paper)">đồng ý chính sách trên</b></li>
       </ul>
     </div>
   </div>
 
-  <div class="offer" id="mua">
+  <div class="offer">
     <span class="limit">20 suất đầu · giá mở hàng</span>
     <div class="price"><span class="now">99.000đ</span><span class="was">249.000đ</span></div>
-    <p class="offer-lead">Ít hơn một bữa ăn ngoài, để biết chính xác mình đang mất tiền ở đâu</p>
+    <p class="offer-lead">Bằng một bữa ăn ngoài, để biết chính xác tiền đang rò ở đâu</p>
     <div class="incl">
       <div class="incl-item">
         <span class="incl-num">①</span>
         <div class="incl-body">
           <span class="incl-title">Bài chẩn đoán 6 mắt xích</span>
-          <span class="incl-desc">12 câu hỏi, ra điểm /100 và biểu đồ 6 mắt xích ngay</span>
+          <span class="incl-desc">12 câu · ra điểm /100 và biểu đồ 6 mắt xích ngay</span>
         </div>
       </div>
       <div class="incl-item">
@@ -444,10 +572,14 @@
         </div>
       </div>
     </div>
-    <p class="offer-closing"><b style="color:var(--paper)">99.000đ</b> không mua thêm kiến thức.<br>Chúng mua cho bạn <b style="color:var(--gold)">sự rõ ràng</b>: biết sửa đâu, bỏ đâu, làm gì tuần này.</p>
-    <p class="pay-warn" style="margin-top:var(--space-4);font-size:.9375rem;max-width:28rem;margin-left:auto;margin-right:auto;text-align:center"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b></p>
-    <p class="muted" style="margin-top:var(--space-2);font-size:.8125rem;max-width:28rem;margin-left:auto;margin-right:auto;text-align:center;line-height:1.55">Bấm mua = bạn đã đọc kỹ, hiểu rõ nội dung nhận được, và <b style="color:var(--paper)">đồng ý không hoàn tiền</b> sau khi chuyển khoản.</p>
-    <button class="cta-btn btn-pulse btn-pulse--float" onclick="openPay()">Tôi đã suy nghĩ kỹ · cho tôi bản chẩn đoán</button>
+    <p class="offer-closing"><span class="price-was" id="offerClosingWas">249.000đ</span> <b style="color:var(--paper)" id="offerClosingNow">99.000đ</b> không mua thêm lý thuyết.<br>Mua <b style="color:var(--gold)">sự rõ ràng</b>: biết sửa đâu, bỏ đâu, làm gì tuần này.</p>
+    <p class="muted" style="margin-top:var(--space-4);font-size:.8125rem;max-width:28rem;margin-left:auto;margin-right:auto;text-align:center;line-height:1.55">Bấm nút dưới = bạn đã đọc kỹ và <b style="color:var(--paper)">đồng ý không hoàn tiền</b> sau thanh toán.</p>
+    <div class="offer-buy-wrap" id="mua">
+      <button type="button" class="offer-buy btn-pulse btn-pulse--gold btn-pulse--float" onclick="openPay()">
+        <span class="offer-buy__main">Tôi sẵn sàng • cho tôi bản chẩn đoán</span>
+        <span class="offer-buy__sub"><span class="price-was" id="offerBuyWas">249.000đ</span> <span id="offerBuyNow">99.000đ</span> • truy cập trọn đời</span>
+      </button>
+    </div>
   </div>
 
   <footer>Bộ Chẩn Đoán 6 Mắt Xích · by Loc Tran</footer>
@@ -456,21 +588,26 @@
 <div class="modal" id="modal">
   <div class="box">
     <button class="closex" onclick="closePay()" aria-label="Đóng">×</button>
-    <div id="infoStep">
-      <div class="step">Bước 1 / 2 · Gửi sản phẩm về đâu?</div>
-      <h3>Nhập email, mình gửi link ngay sau khi nhận tiền</h3>
-      <p class="pay-warn" style="font-size:14px;margin-bottom:10px;text-align:center"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b></p>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:14px">Sản phẩm số, <b style="color:var(--paper)">không hoàn tiền</b>. Chỉ tiếp tục nếu bạn đã đọc kỹ và chắc chắn muốn mua.</p>
-      <label for="email">Email của bạn</label>
-      <input id="email" type="email" placeholder="email@ban.com" autocomplete="email">
-      <label for="name">Tên gọi (để mình xưng hô cho đúng)</label>
-      <input id="name" type="text" placeholder="Ví dụ: Linh, Anh Tuấn…">
-      <button class="confirm btn-pulse btn-pulse--gold" id="createBtn" onclick="createOrder()">Tiếp theo · chọn cách thanh toán →</button>
+    <div class="modal-progress" id="modalProgress" aria-hidden="true">
+      <span class="on"></span><span></span><span></span>
     </div>
+
+    <div id="infoStep">
+      <p class="modal-step">Bước 1 / 3 · Nhận hàng</p>
+      <h3 class="modal-title">Bạn nhận sản phẩm ở đâu?</h3>
+      <p class="modal-desc">Nhập email, mình gửi link kho truy cập ngay khi tiền về.</p>
+      <p class="modal-footnote">Sản phẩm số · <b>không hoàn tiền</b> sau thanh toán.</p>
+      <label for="email">Email nhận link</label>
+      <input id="email" type="email" placeholder="email@ban.com" autocomplete="email">
+      <label for="name">Tên mình xưng hô với bạn</label>
+      <input id="name" type="text" placeholder="Ví dụ: Linh, Anh Tuấn…">
+      <button class="confirm btn-pulse btn-pulse--gold" id="createBtn" onclick="createOrder()">Tiếp theo · thanh toán →</button>
+    </div>
+
     <div id="payStep" style="display:none">
-      <div class="step">Bước 2 / 2 · Thanh toán</div>
-      <h3 id="payTitle">Chọn phương thức · 99.000đ</h3>
-      <p class="pay-warn" style="font-size:14px;text-align:center;margin-bottom:12px"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b></p>
+      <p class="modal-step">Bước 2 / 3 · Thanh toán</p>
+      <h3 class="modal-title">Quét mã, chuyển khoản</h3>
+      <p class="modal-desc" id="payDesc">VietQR · 99.000đ · giữ nguyên mã đơn ở nội dung CK.</p>
 
       <div class="pay-tabs">
         <button type="button" class="on" id="tabVnd" onclick="setPayTab('vnd')">📱 VietQR</button>
@@ -479,39 +616,43 @@
 
       <div class="pay-pane on" id="paneVnd">
         <div class="pay-badge"><span>Chuyển khoản ngân hàng</span></div>
-        <p style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:12px;line-height:1.55">
-          Quét mã bằng app ngân hàng · giữ nguyên nội dung chuyển khoản bên dưới.
-        </p>
         <div class="qr">
           <img id="qrImg" src="" alt="Mã QR VietQR thanh toán">
-          <div class="info" id="qrInfo"></div>
+          <div class="info" id="qrInfo">Quét bằng app ngân hàng</div>
         </div>
         <div class="bank-detail" id="bankDetail"></div>
-        <p class="wait-line" id="waitLine">⏳ Đang chờ xác nhận chuyển khoản…</p>
+        <p class="wait-line" id="waitLine"><span class="wait-line__spin" aria-hidden="true"></span><span>Đang xác nhận, thường chỉ vài giây</span></p>
       </div>
 
       <div class="pay-pane" id="panePaypal">
         <div class="pay-badge"><span>PayPal · quốc tế</span></div>
-        <p style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:12px;line-height:1.55">
-          Dành cho khách ngoài Việt Nam hoặc có tài khoản PayPal.
-        </p>
         <div class="paypal-box">
           <img id="paypalQr" src="PayPal_QR.JPG" alt="PayPal QR thanh toán">
         </div>
         <p style="text-align:center;font-size:15px;margin:8px 0"><b style="color:var(--gold)" id="paypalAmt">$3.90 USD</b></p>
         <p style="text-align:center;font-size:13px;color:var(--muted)">Ghi chú khi gửi: <b style="color:var(--paper)" id="paypalCode">...</b></p>
         <div class="paypal-note">
-          PayPal <b>chưa tự động</b> mở sản phẩm như chuyển khoản VN. Sau khi gửi tiền, mình xác nhận và gửi link vào email trong vòng <b>24 giờ</b> (thường nhanh hơn).
+          PayPal chưa tự mở sản phẩm. Mình xác nhận tay và gửi link email trong <b>24 giờ</b> (thường nhanh hơn).
         </div>
       </div>
     </div>
+
     <div class="deliver" id="deliverStep">
-      <div class="step">Hoàn tất</div>
-      <div class="tick">✓</div>
-      <h3 id="dHi">Xong rồi!</h3>
-      <p>Tiền đã về, link sản phẩm cũng đã gửi vào email của bạn. Mở ngay, bài chẩn đoán chỉ mất 15 phút.</p>
-      <a class="access btn-pulse btn-pulse--float" id="accessLink" href="kho-qua.html" target="_blank">Bắt đầu chẩn đoán ngay →</a>
-      <p class="note">Lưu link này lại nhé. Dùng trọn đời, quay lại bất cứ lúc nào.</p>
+      <div class="deliver__glow" aria-hidden="true"></div>
+      <p class="modal-step">Bước 3 / 3 · Vào kho</p>
+      <div class="deliver__icon-wrap">
+        <div class="deliver__ring" aria-hidden="true"></div>
+        <div class="tick" aria-hidden="true">✓</div>
+      </div>
+      <h3 class="modal-title deliver__title" id="dHi">Thanh toán thành công</h3>
+      <p class="modal-desc">Link kho đã gửi email. Làm bài chẩn đoán trước, khoảng <b style="color:var(--gold)">15 phút</b>.</p>
+      <ul class="deliver__checks">
+        <li><span class="ico" aria-hidden="true">📧</span><span>Link kho đã gửi email bạn vừa nhập</span></li>
+        <li><span class="ico" aria-hidden="true">①</span><span>Bắt đầu từ bài chẩn đoán, rồi mới tải công cụ</span></li>
+        <li><span class="ico" aria-hidden="true">♾️</span><span>Truy cập trọn đời, quay lại bất cứ lúc nào</span></li>
+      </ul>
+      <a class="access cta-btn btn-pulse btn-pulse--float" id="accessLink" href="kho-qua.html" target="_blank" rel="noopener">Vào kho · bắt đầu chẩn đoán →</a>
+      <p class="deliver__note modal-footnote">Lưu email. Đó là cửa vào kho truy cập trọn đời.</p>
     </div>
   </div>
 </div>
@@ -520,6 +661,7 @@
 <script>
 const API_URL = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.API_URL) || '';
 const AMOUNT  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.AMOUNT) || 99000;
+const WAS_AMOUNT=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.WAS_AMOUNT)||249000;
 const PREFIX  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.ORDER_PREFIX) || 'DH';
 const PAYPAL_QR = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_QR) || 'PayPal_QR.JPG';
 const PAYPAL_USD= (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_USD) || 3.9;
@@ -527,7 +669,41 @@ const URGENCY_SLOTS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.URGENCY_SLOTS
 const COUNTDOWN_HOURS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.COUNTDOWN_HOURS)||24;
 const SITE_URL=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.SITE_URL)||'';
 const STATUS_URL=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.STATUS_URL)||API_URL;
-let pollTimer=null, currentCode=null, payTab='vnd', pollCount=0;
+let pollTimer=null, currentCode=null, payTab='vnd';
+
+function getUrgencyBarOffset(){
+  if(document.body.classList.contains('modal-open'))return 12;
+  var bar=document.getElementById('urgencyBar');
+  return(bar&&bar.offsetHeight?bar.offsetHeight:58)+12;
+}
+function scrollToBuy(e,instant){
+  if(e)e.preventDefault();
+  var el=document.getElementById('mua');
+  if(!el)return;
+  var btn=el.querySelector('.offer-buy');
+  var target=btn||el;
+  var barOffset=getUrgencyBarOffset();
+  var rect=target.getBoundingClientRect();
+  var visibleH=window.innerHeight-barOffset;
+  var y=rect.top+window.scrollY-barOffset-(visibleH-rect.height)/2;
+  window.scrollTo({top:Math.max(0,y),behavior:instant?'auto':'smooth'});
+  if(history.replaceState)history.replaceState(null,'','#mua');
+  if(btn){
+    btn.classList.remove('offer-buy--focus');
+    void btn.offsetWidth;
+    btn.classList.add('offer-buy--focus');
+    setTimeout(function(){btn.classList.remove('offer-buy--focus');},2000);
+  }
+}
+(function initOfferScroll(){
+  document.querySelectorAll('a[href="#mua"]').forEach(function(a){
+    a.addEventListener('click',scrollToBuy);
+  });
+  if(location.hash==='#mua'||location.hash==='#goi-hang'){
+    if(history.replaceState)history.replaceState(null,'',location.pathname+location.search);
+    requestAnimationFrame(function(){scrollToBuy(null,true);});
+  }
+})();
 
 (function initUrgencyBar(){
   const KEY='cd6x_countdown_end';
@@ -539,10 +715,23 @@ let pollTimer=null, currentCode=null, payTab='vnd', pollCount=0;
   const cdS=document.getElementById('cdS');
   if(!barEl||!cdH)return;
 
-  if(priceEl)priceEl.textContent=AMOUNT.toLocaleString('vi-VN')+'đ';
+  function fmtVnd(n){return n.toLocaleString('vi-VN')+'đ'}
+  function setPricePair(wasEl,nowEl){
+    if(wasEl)wasEl.textContent=fmtVnd(WAS_AMOUNT);
+    if(nowEl)nowEl.textContent=fmtVnd(AMOUNT);
+  }
+  setPricePair(document.getElementById('urgencyWas'),priceEl);
+  setPricePair(document.getElementById('heroWas'),document.getElementById('heroNow'));
+  setPricePair(document.getElementById('offerClosingWas'),document.getElementById('offerClosingNow'));
+  setPricePair(document.getElementById('offerBuyWas'),document.getElementById('offerBuyNow'));
+  setPricePair(document.getElementById('policyWas'),document.getElementById('policyNow'));
   if(slotsEl)slotsEl.textContent=URGENCY_SLOTS;
   const limitBadge=document.querySelector('.offer .limit');
   if(limitBadge)limitBadge.textContent=URGENCY_SLOTS+' suất đầu · giá mở hàng';
+  const priceNow=document.querySelector('.offer .price .now');
+  const priceWas=document.querySelector('.offer .price .was');
+  if(priceNow)priceNow.textContent=fmtVnd(AMOUNT);
+  if(priceWas)priceWas.textContent=fmtVnd(WAS_AMOUNT);
 
   function getEnd(){
     let end=parseInt(localStorage.getItem(KEY)||'0',10);
@@ -574,17 +763,25 @@ let pollTimer=null, currentCode=null, payTab='vnd', pollCount=0;
   setInterval(tick,1000);
 })();
 
+function setModalStep(n){
+  document.querySelectorAll('#modalProgress span').forEach((dot,i)=>{
+    dot.classList.remove('on','done');
+    if(i+1<n)dot.classList.add('done');
+    else if(i+1===n)dot.classList.add('on');
+  });
+}
 function setPayTab(tab){
   payTab=tab;
   document.getElementById('tabVnd').classList.toggle('on',tab==='vnd');
   document.getElementById('tabPaypal').classList.toggle('on',tab==='paypal');
   document.getElementById('paneVnd').classList.toggle('on',tab==='vnd');
   document.getElementById('panePaypal').classList.toggle('on',tab==='paypal');
-  const titles={
-    vnd:'VietQR · '+AMOUNT.toLocaleString('vi-VN')+'đ',
-    paypal:'PayPal · $'+PAYPAL_USD.toFixed(2)
-  };
-  document.getElementById('payTitle').textContent=titles[tab]||titles.vnd;
+  const desc=document.getElementById('payDesc');
+  if(desc){
+    desc.textContent=tab==='paypal'
+      ?('PayPal · $'+PAYPAL_USD.toFixed(2)+' · ghi mã đơn vào ghi chú gửi tiền.')
+      :('VietQR · '+AMOUNT.toLocaleString('vi-VN')+'đ · giữ nguyên mã đơn ở nội dung CK.');
+  }
   if(tab==='vnd'&&currentCode)startPolling();
   else if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
 }
@@ -595,19 +792,29 @@ function fillBankDetail(data){
     '<div><b>'+(data.bank_code||'TPBank')+'</b> · '+(data.holder||'TRAN XUAN LOC')+'</div>'+
     '<div>STK: <b>'+(data.bank_account||'')+'</b></div>'+
     '<div>Số tiền: <b>'+AMOUNT.toLocaleString('vi-VN')+'đ</b></div>'+
-    '<div>Nội dung CK: <b class="code">'+(data.order_code||'')+'</b> <span style="color:var(--signal)">← không sửa</span></div>';
+    '<div>Nội dung CK: <b class="code">'+(data.order_code||'')+'</b> <span style="color:var(--signal)">← không đổi</span></div>';
 }
-function openPay(){document.getElementById('modal').classList.add('on');document.body.style.overflow='hidden';}
+function openPay(){
+  document.body.classList.add('modal-open');
+  document.getElementById('modal').classList.add('on');
+  document.body.style.overflow='hidden';
+  document.getElementById('infoStep').style.display='block';
+  document.getElementById('payStep').style.display='none';
+  document.getElementById('deliverStep').style.display='none';
+  setModalStep(1);
+}
 function closePay(){
+  document.body.classList.remove('modal-open');
   document.getElementById('modal').classList.remove('on');
   document.body.style.overflow='';
+  document.querySelector('#modal .box').classList.remove('box--success');
   if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
 }
 async function createOrder(){
   const email=document.getElementById('email').value.trim();
   const name=document.getElementById('name').value.trim()||'bạn';
-  if(!email||!email.includes('@')){alert('Cho mình email nhé, để gửi link sản phẩm sau khi thanh toán.');return;}
-  if(!API_URL||API_URL.indexOf('THAY_BANG')!==-1){alert('Chưa cấu hình API_URL trong config.js. Deploy Google Apps Script trước nhé.');return;}
+  if(!email||!email.includes('@')){alert('Cho mình email nhé, để gửi link kho sau khi tiền về.');return;}
+  if(!API_URL||API_URL.indexOf('THAY_BANG')!==-1){alert('Chưa cấu hình API. Liên hệ admin hoặc thử lại sau.');return;}
   const btn=document.getElementById('createBtn');
   btn.disabled=true;btn.textContent='Đang tạo đơn…';
   try{
@@ -626,20 +833,25 @@ async function createOrder(){
     document.getElementById('paypalCode').textContent=data.order_code;
     document.getElementById('infoStep').style.display='none';
     document.getElementById('payStep').style.display='block';
+    setModalStep(2);
     setPayTab('vnd');
-    btn.disabled=false;btn.textContent='Tiếp theo · chọn cách thanh toán →';
+    btn.disabled=false;btn.textContent='Tiếp theo · thanh toán →';
   }catch(err){
-    alert('Chưa tạo được đơn thanh toán. Kiểm tra lại API_URL nhé.');
-    btn.disabled=false;btn.textContent='Tiếp theo · chọn cách thanh toán →';
+    alert('Chưa tạo được đơn. Kiểm tra kết nối và thử lại.');
+    btn.disabled=false;btn.textContent='Tiếp theo · thanh toán →';
   }
 }
 function showPaidSuccess(productUrl){
   if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
   const name=document.getElementById('name').value.trim()||'bạn';
+  const safeName=name.replace(/[<>&"]/g,'');
+  document.getElementById('dHi').innerHTML='Chào <span class="deliver__name">'+safeName+'</span>, tiền đã về!';
   if(productUrl){document.getElementById('accessLink').href=productUrl;}
+  document.getElementById('infoStep').style.display='none';
   document.getElementById('payStep').style.display='none';
   document.getElementById('deliverStep').style.display='block';
-  document.getElementById('dHi').textContent='Chào '+name+', sẵn sàng chưa?';
+  document.querySelector('#modal .box').classList.add('box--success');
+  setModalStep(3);
   try{sessionStorage.removeItem('cd6x_pending_order');}catch(e){}
 }
 function statusCheckUrl(code){
@@ -650,11 +862,6 @@ function statusCheckUrl(code){
 }
 async function checkPaymentStatus(){
   if(!currentCode)return false;
-  pollCount++;
-  const waitEl=document.getElementById('waitLine');
-  if(waitEl){
-    waitEl.textContent='⏳ Đang kiểm tra thanh toán… (lần '+pollCount+')';
-  }
   try{
     const res=await fetch(statusCheckUrl(currentCode),{cache:'no-store',redirect:'follow'});
     const data=JSON.parse(await res.text());
@@ -662,25 +869,18 @@ async function checkPaymentStatus(){
       showPaidSuccess(data.product_url||'');
       return true;
     }
-    if(waitEl){
-      waitEl.textContent='⏳ Đang chờ ngân hàng xác nhận… (thường 10–60 giây sau khi chuyển)';
-    }
-  }catch(err){
-    if(waitEl)waitEl.textContent='⏳ Đang thử kết nối lại…';
-  }
+  }catch(err){}
   return false;
 }
 function startPolling(){
   if(payTab!=='vnd')return;
   if(pollTimer)clearInterval(pollTimer);
-  pollCount=0;
   checkPaymentStatus();
   pollTimer=setInterval(checkPaymentStatus,2000);
 }
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible'&&currentCode&&payTab==='vnd')checkPaymentStatus();
 });
-document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closePay();});
 (function resumePendingOrder(){
   try{
     const code=sessionStorage.getItem('cd6x_pending_order');
@@ -690,11 +890,15 @@ document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='
         const data=JSON.parse(t);
         if(data.ok&&data.status==='paid'){
           currentCode=code;
-          showPaidSuccess(data.product_url||'');
           openPay();
+          showPaidSuccess(data.product_url||'');
         }
       }).catch(()=>{});
   }catch(e){}
+})();
+(function initPayDesc(){
+  const desc=document.getElementById('payDesc');
+  if(desc)desc.textContent='VietQR · '+AMOUNT.toLocaleString('vi-VN')+'đ · giữ nguyên mã đơn ở nội dung CK.';
 })();
 </script>
 </body>

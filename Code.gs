@@ -244,7 +244,7 @@ function deliver_(email, name, code) {
     '</div>';
   MailApp.sendEmail({
     to: email,
-    subject: 'Sản phẩm của bạn đã sẵn sàng — ' + CONFIG.PRODUCT_NAME,
+    subject: 'Sản phẩm của bạn đã sẵn sàng · ' + CONFIG.PRODUCT_NAME,
     htmlBody: html
   });
 }

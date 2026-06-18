@@ -84,9 +84,9 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Bài chẩn đoán · 12 câu hỏi</div>
+    <div class="eyebrow">Bước tiếp theo sau khi mua</div>
     <h1>Hệ thống bán hàng của bạn</h1>
-    <p class="sub">Trả lời thật, không có đúng sai. Mỗi câu chọn mức gần nhất với thực tế.</p>
+    <p class="sub">12 câu · trả lời thật · không có đúng sai. Mỗi câu chọn mức gần nhất với thực tế hôm nay.</p>
     <div class="progress"><i id="progBar" style="width:0%"></i></div>
     <div class="prog-txt"><span id="progNum">0</span> / 12</div>
   </header>
@@ -97,12 +97,13 @@
     <div class="result-head">
       <div class="score-ring" id="scoreRing">0</div>
       <div class="score-label">Điểm hệ thống /100</div>
+      <p class="sub" style="margin-top:var(--space-4);max-width:28rem;margin-left:auto;margin-right:auto">Đây là bức tranh hiện tại, không phải điểm tuyệt đối. Mắt xích đỏ là nơi tiền đang rò nhiều nhất.</p>
     </div>
     <div class="bars" id="bars"></div>
     <div class="weak-box" id="weakBox"></div>
     <div class="actions">
-      <a class="btn-gold btn-pulse btn-pulse--gold btn-pulse--float link-drive" id="driveLink" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho tài liệu & công cụ →</a>
-      <a class="link-kho" href="kho-qua.html">Quay lại kho truy cập</a>
+      <a class="btn-gold btn-pulse btn-pulse--gold btn-pulse--float link-drive" id="driveLink" href="https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing" target="_blank" rel="noopener">Mở kho · sửa mắt xích yếu nhất →</a>
+      <a class="link-kho" href="kho-qua.html">← Quay lại lộ trình kho truy cập</a>
     </div>
   </div>
 
@@ -210,9 +211,9 @@ function showResult() {
   const p = PILLARS[weakIdx];
   document.getElementById('weakBox').innerHTML = `
     <h3>⚠ Mắt xích yếu nhất: ${p.name} (${min}/100)</h3>
-    <p>Đây là nơi bạn đang để tiền rơi vãi nhất. Ưu tiên sửa 3 việc sau:</p>
+    <p>Đây là chỗ tiền đang rơi vãi nhiều nhất. Sửa 3 việc sau trước, rồi mới sang mắt xích khác:</p>
     <ul>${p.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
-    <p style="margin-top:12px;font-size:13px">Mở checklist + prompt trong <b style="color:var(--paper)">kho tài liệu</b>, làm theo mắt xích ${p.name} trước.</p>`;
+    <p style="margin-top:12px;font-size:13px">Trong <b style="color:var(--paper)">kho tài liệu</b> có checklist + prompt cho mắt xích ${p.name}. Làm xong, 30 ngày sau quay lại làm lại bài này.</p>`;
 
   window.scrollTo({top:0,behavior:'smooth'});
 }

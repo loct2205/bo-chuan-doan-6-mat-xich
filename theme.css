@@ -40,7 +40,7 @@
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--urgency-h,58px) + 12px);-webkit-text-size-adjust:100%}
 body{
   font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
   background-color:var(--ink);
@@ -67,7 +67,7 @@ h3{font-size:1.0625rem;font-weight:700;margin-bottom:var(--space-2)}
   font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;
   color:var(--signal);font-weight:700;margin-bottom:var(--space-3);
 }
-.lede,.sub{color:var(--paper-soft);font-size:1.0625rem;max-width:34rem}
+.lede,.sub{color:var(--paper-soft);font-size:1.0625rem;max-width:34rem;text-wrap:balance}
 .lede b,.sub b{color:var(--paper)}
 .muted{color:var(--muted)}
 .text-dim{color:var(--paper-dim)}

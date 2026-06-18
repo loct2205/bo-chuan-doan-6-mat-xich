@@ -11,7 +11,8 @@ var SITE_CONFIG = {
   SEPAY_WEBHOOK_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app/api/sepay-webhook',
   STATUS_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app/api/order-status',
 
-  AMOUNT: 9000,
+  AMOUNT: 99000,
+  WAS_AMOUNT: 249000,
   ORDER_PREFIX: 'DH',
 
   PRODUCT_HUB: 'kho-qua.html',
