@@ -4,7 +4,8 @@
  *
  * 1. Web gọi action=create → mã đơn + qr.sepay.vn/img
  * 2. Khách quét QR, chuyển khoản đúng nội dung
- * 3. my.sepay.vn → Webhooks → GAS → paid + email
+ * 3. my.sepay.vn → Webhooks → Vercel /api/sepay-webhook → GAS → paid + email
+ *    (Không trỏ thẳng GAS: POST GAS trả HTTP 302, SePay coi là thất bại)
  */
 
 // ----------------------- CONFIG -----------------------------
