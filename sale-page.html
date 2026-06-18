@@ -266,8 +266,16 @@
   .box h3{font-size:1.375rem;font-weight:800;margin-bottom:var(--space-2)}
   .box .step{color:var(--muted-dim);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:var(--space-4)}
   .qr{background:#fff;border-radius:var(--radius-sm);padding:var(--space-5);text-align:center;margin:var(--space-3) 0 var(--space-4);min-height:168px;display:flex;flex-direction:column;justify-content:center}
-  .qr img{width:200px;max-width:100%;margin:0 auto}
+  .qr img{width:220px;max-width:100%;margin:0 auto;display:block}
   .qr .info{color:var(--ink);font-size:.875rem;margin-top:var(--space-3);font-weight:600;line-height:1.45}
+  .bank-detail{
+    background:rgba(6,18,32,.35);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:var(--space-4);margin-top:var(--space-3);text-align:left;font-size:.8125rem;
+    color:var(--muted);line-height:1.65;
+  }
+  .bank-detail b{color:var(--paper)}
+  .bank-detail .code{color:var(--gold);font-size:.9375rem;letter-spacing:.04em}
+  .wait-line{color:var(--gold);font-size:.875rem;text-align:center;margin-top:var(--space-4)}
   .confirm{width:100%;margin-top:var(--space-5)}
   .confirm:disabled{opacity:.55;cursor:wait}
   .closex{float:right;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;line-height:1;padding:var(--space-2);margin:-var(--space-2);border-radius:8px}
@@ -282,35 +290,14 @@
   .pay-tabs button.on{border-color:var(--gold);color:var(--gold);background:rgba(240,193,77,.1)}
   .pay-pane{display:none}
   .pay-pane.on{display:block}
-  .pg-flow{
-    list-style:none;margin:0 0 var(--space-5);padding:0;
-    display:flex;flex-direction:column;gap:var(--space-3);
-  }
-  .pg-flow li{
-    display:flex;gap:var(--space-3);align-items:flex-start;
-    font-size:.8125rem;color:var(--muted);line-height:1.5;
-  }
-  .pg-flow .n{
-    flex:0 0 1.5rem;height:1.5rem;border-radius:50%;
-    background:rgba(240,193,77,.15);border:1px solid rgba(240,193,77,.4);
-    color:var(--gold);font-size:.6875rem;font-weight:800;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .pg-badge{
+  .pay-badge{
     text-align:center;font-size:.6875rem;font-weight:700;letter-spacing:.08em;
     text-transform:uppercase;color:var(--muted-dim);margin-bottom:var(--space-3);
   }
-  .pg-badge span{
+  .pay-badge span{
     display:inline-block;padding:4px 10px;border-radius:99px;
     background:rgba(46,204,113,.12);border:1px solid rgba(46,204,113,.35);color:#6ee7a0;
   }
-  .alt-pay{margin-top:var(--space-5);border-top:1px solid var(--line);padding-top:var(--space-4)}
-  .alt-pay summary{
-    cursor:pointer;font-size:.8125rem;font-weight:700;color:var(--muted);
-    list-style:none;text-align:center;padding:var(--space-2) 0;
-  }
-  .alt-pay summary::-webkit-details-marker{display:none}
-  .alt-pay[open] summary{color:var(--gold);margin-bottom:var(--space-3)}
   .paypal-box{background:#fff;border-radius:var(--radius-sm);padding:var(--space-5);text-align:center;margin:var(--space-3) 0 var(--space-4)}
   .paypal-box img{max-width:200px;width:100%;border-radius:8px}
   .paypal-note{font-size:.875rem;color:var(--paper-soft);text-align:left;background:rgba(255,99,71,.08);border-left:3px solid var(--signal);padding:var(--space-4);border-radius:var(--radius-sm);margin-top:var(--space-4);line-height:1.55}
@@ -478,70 +465,43 @@
       <input id="email" type="email" placeholder="email@ban.com" autocomplete="email">
       <label for="name">Tên gọi (để mình xưng hô cho đúng)</label>
       <input id="name" type="text" placeholder="Ví dụ: Linh, Anh Tuấn…">
-      <button class="confirm btn-pulse btn-pulse--gold" id="createBtn" onclick="createOrder()">Tiếp theo · thanh toán qua SePay →</button>
+      <button class="confirm btn-pulse btn-pulse--gold" id="createBtn" onclick="createOrder()">Tiếp theo · chọn cách thanh toán →</button>
     </div>
     <div id="payStep" style="display:none">
-      <div class="step">Bước 2 / 2 · Thanh toán qua SePay</div>
-      <h3 id="payTitle">Cổng thanh toán SePay · 99.000đ</h3>
-      <p class="pay-warn" style="font-size:14px;text-align:center;margin-bottom:12px"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b><br><span style="color:var(--muted);font-size:13px;font-weight:400">Thanh toán xong không hoàn tiền.</span></p>
+      <div class="step">Bước 2 / 2 · Thanh toán</div>
+      <h3 id="payTitle">Chọn phương thức · 99.000đ</h3>
+      <p class="pay-warn" style="font-size:14px;text-align:center;margin-bottom:12px"><b>⚠️ Hãy suy nghĩ thật kỹ trước khi thanh toán.</b></p>
 
-      <div class="pay-pane on" id="panePg">
-        <div class="pg-badge"><span id="pgEnvBadge">SePay · bảo mật</span></div>
-        <ol class="pg-flow">
-          <li><span class="n">1</span><span>Bấm nút bên dưới → chuyển sang trang thanh toán SePay</span></li>
-          <li><span class="n">2</span><span>Quét QR ngân hàng hoặc chọn phương thức trên cổng SePay</span></li>
-          <li><span class="n">3</span><span>SePay xác nhận → tự mở kho sản phẩm + gửi email cho bạn</span></li>
-        </ol>
-        <button type="button" class="confirm btn-pulse btn-pulse--gold" id="pgPayBtn" onclick="submitPgCheckout()" style="width:100%;margin-top:0">
-          Thanh toán <span id="pgAmt">99.000đ</span> qua SePay →
-        </button>
-        <p style="color:var(--muted-dim);font-size:12px;text-align:center;margin-top:12px">Mã đơn: <b style="color:var(--paper)" id="pgCode">—</b></p>
-
-        <details class="alt-pay" id="altPayBlock">
-          <summary>Phương thức khác (VietQR · PayPal)</summary>
-          <div class="pay-tabs" id="altPayTabs">
-            <button type="button" id="tabVnd" onclick="setPayTab('vnd')">📱 VietQR</button>
-            <button type="button" id="tabPaypal" onclick="setPayTab('paypal')">🌐 PayPal</button>
-          </div>
-          <div class="pay-pane" id="paneVnd">
-            <p style="color:var(--muted);font-size:12px;text-align:center;margin-bottom:10px">Tự động xác nhận qua webhook SePay · Giữ nguyên nội dung CK</p>
-            <div class="qr">
-              <img id="qrImg" src="" alt="Mã QR VietQR thanh toán">
-              <div class="info" id="qrInfo"></div>
-            </div>
-            <p style="color:var(--gold);font-size:13px;text-align:center">Đang chờ ngân hàng xác nhận…</p>
-          </div>
-          <div class="pay-pane" id="panePaypal">
-            <p style="color:var(--muted);font-size:12px;text-align:center;margin-bottom:10px">Dành cho khách quốc tế · Quét QR PayPal bên dưới</p>
-            <div class="paypal-box">
-              <img id="paypalQr" src="PayPal_QR.JPG" alt="PayPal QR thanh toán">
-            </div>
-            <p style="text-align:center;font-size:15px;margin:8px 0"><b style="color:var(--gold)" id="paypalAmt">$3.90 USD</b></p>
-            <p style="text-align:center;font-size:13px;color:var(--muted)">Ghi chú / Note khi gửi: <b style="color:var(--paper)" id="paypalCode">...</b></p>
-            <div class="paypal-note">
-              PayPal <b>chưa tự động</b> mở sản phẩm như chuyển khoản VN. Sau khi gửi tiền, mình xác nhận và gửi link vào email của bạn trong vòng <b>24 giờ</b> (thường nhanh hơn).
-            </div>
-          </div>
-        </details>
+      <div class="pay-tabs">
+        <button type="button" class="on" id="tabVnd" onclick="setPayTab('vnd')">📱 VietQR</button>
+        <button type="button" id="tabPaypal" onclick="setPayTab('paypal')">🌐 PayPal</button>
       </div>
 
-      <div class="pay-pane" id="paneQrOnly" style="display:none">
-        <div class="pay-tabs" id="qrOnlyTabs">
-          <button type="button" class="on" id="tabVndOnly" onclick="setPayTab('vnd')">📱 VietQR</button>
-          <button type="button" id="tabPaypalOnly" onclick="setPayTab('paypal')">🌐 PayPal</button>
+      <div class="pay-pane on" id="paneVnd">
+        <div class="pay-badge"><span>Chuyển khoản ngân hàng</span></div>
+        <p style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:12px;line-height:1.55">
+          Quét mã bằng app ngân hàng · giữ nguyên nội dung chuyển khoản bên dưới.
+        </p>
+        <div class="qr">
+          <img id="qrImg" src="" alt="Mã QR VietQR thanh toán">
+          <div class="info" id="qrInfo"></div>
         </div>
-        <div class="pay-pane on" id="paneVndOnly">
-          <p style="color:var(--muted);font-size:12px;text-align:center;margin-bottom:10px">Tự động xác nhận qua webhook SePay</p>
-          <div class="qr">
-            <img id="qrImgOnly" src="" alt="Mã QR VietQR thanh toán">
-            <div class="info" id="qrInfoOnly"></div>
-          </div>
-          <p style="color:var(--gold);font-size:13px;text-align:center">Đang chờ ngân hàng xác nhận…</p>
+        <div class="bank-detail" id="bankDetail"></div>
+        <p class="wait-line">⏳ Đang chờ xác nhận chuyển khoản…</p>
+      </div>
+
+      <div class="pay-pane" id="panePaypal">
+        <div class="pay-badge"><span>PayPal · quốc tế</span></div>
+        <p style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:12px;line-height:1.55">
+          Dành cho khách ngoài Việt Nam hoặc có tài khoản PayPal.
+        </p>
+        <div class="paypal-box">
+          <img id="paypalQr" src="PayPal_QR.JPG" alt="PayPal QR thanh toán">
         </div>
-        <div class="pay-pane" id="panePaypalOnly">
-          <div class="paypal-box"><img id="paypalQrOnly" src="PayPal_QR.JPG" alt="PayPal QR"></div>
-          <p style="text-align:center;font-size:15px;margin:8px 0"><b style="color:var(--gold)" id="paypalAmtOnly">$3.90 USD</b></p>
-          <p style="text-align:center;font-size:13px;color:var(--muted)">Note: <b style="color:var(--paper)" id="paypalCodeOnly">...</b></p>
+        <p style="text-align:center;font-size:15px;margin:8px 0"><b style="color:var(--gold)" id="paypalAmt">$3.90 USD</b></p>
+        <p style="text-align:center;font-size:13px;color:var(--muted)">Ghi chú khi gửi: <b style="color:var(--paper)" id="paypalCode">...</b></p>
+        <div class="paypal-note">
+          PayPal <b>chưa tự động</b> mở sản phẩm như chuyển khoản VN. Sau khi gửi tiền, mình xác nhận và gửi link vào email trong vòng <b>24 giờ</b> (thường nhanh hơn).
         </div>
       </div>
     </div>
@@ -560,14 +520,13 @@
 <script>
 const API_URL = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.API_URL) || '';
 const AMOUNT  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.AMOUNT) || 99000;
-const PREFIX  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.ORDER_PREFIX) || 'CD6X';
+const PREFIX  = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.ORDER_PREFIX) || 'DH';
 const PAYPAL_QR = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_QR) || 'PayPal_QR.JPG';
 const PAYPAL_USD= (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.PAYPAL_USD) || 3.9;
 const URGENCY_SLOTS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.URGENCY_SLOTS)||20;
 const COUNTDOWN_HOURS=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.COUNTDOWN_HOURS)||24;
-const PAYMENT_MODE=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.PAYMENT_MODE)||'pg';
 const SITE_URL=(typeof SITE_CONFIG!=='undefined'&&SITE_CONFIG.SITE_URL)||'';
-let pollTimer=null, currentCode=null, payTab='pg', pgCheckout=null, usePgPrimary=true;
+let pollTimer=null, currentCode=null, payTab='vnd';
 
 (function initUrgencyBar(){
   const KEY='cd6x_countdown_end';
@@ -616,40 +575,26 @@ let pollTimer=null, currentCode=null, payTab='pg', pgCheckout=null, usePgPrimary
 
 function setPayTab(tab){
   payTab=tab;
-  const qrMode=!usePgPrimary;
-  if(qrMode){
-    document.getElementById('tabVndOnly').classList.toggle('on',tab==='vnd');
-    document.getElementById('tabPaypalOnly').classList.toggle('on',tab==='paypal');
-    document.getElementById('paneVndOnly').classList.toggle('on',tab==='vnd');
-    document.getElementById('paneVndOnly').style.display=tab==='vnd'?'block':'none';
-    document.getElementById('panePaypalOnly').classList.toggle('on',tab==='paypal');
-    document.getElementById('panePaypalOnly').style.display=tab==='paypal'?'block':'none';
-  }else{
-    document.getElementById('tabVnd').classList.toggle('on',tab==='vnd');
-    document.getElementById('tabPaypal').classList.toggle('on',tab==='paypal');
-    document.getElementById('paneVnd').classList.toggle('on',tab==='vnd');
-    document.getElementById('paneVnd').style.display=tab==='vnd'?'block':'none';
-    document.getElementById('panePaypal').classList.toggle('on',tab==='paypal');
-    document.getElementById('panePaypal').style.display=tab==='paypal'?'block':'none';
-  }
-  const titles={pg:'Cổng SePay · '+AMOUNT.toLocaleString('vi-VN')+'đ',vnd:'Quét mã · '+AMOUNT.toLocaleString('vi-VN')+'đ',paypal:'PayPal · $'+PAYPAL_USD.toFixed(2)};
-  document.getElementById('payTitle').textContent=titles[tab]||titles.pg;
-  if(tab==='vnd'&&currentCode&&!pollTimer)startPolling();
-  else if(tab!=='vnd'&&pollTimer){clearInterval(pollTimer);pollTimer=null;}
+  document.getElementById('tabVnd').classList.toggle('on',tab==='vnd');
+  document.getElementById('tabPaypal').classList.toggle('on',tab==='paypal');
+  document.getElementById('paneVnd').classList.toggle('on',tab==='vnd');
+  document.getElementById('panePaypal').classList.toggle('on',tab==='paypal');
+  const titles={
+    vnd:'VietQR · '+AMOUNT.toLocaleString('vi-VN')+'đ',
+    paypal:'PayPal · $'+PAYPAL_USD.toFixed(2)
+  };
+  document.getElementById('payTitle').textContent=titles[tab]||titles.vnd;
+  if(tab==='vnd'&&currentCode)startPolling();
+  else if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
 }
-function submitPgCheckout(){
-  if(!pgCheckout||!pgCheckout.fields){alert('Chưa có dữ liệu thanh toán. Tạo đơn lại nhé.');return;}
-  const form=document.createElement('form');
-  form.method='POST';
-  form.action=pgCheckout.checkout_url;
-  form.acceptCharset='UTF-8';
-  Object.keys(pgCheckout.fields).forEach(function(k){
-    const inp=document.createElement('input');
-    inp.type='hidden';inp.name=k;inp.value=pgCheckout.fields[k];
-    form.appendChild(inp);
-  });
-  document.body.appendChild(form);
-  form.submit();
+function fillBankDetail(data){
+  const el=document.getElementById('bankDetail');
+  if(!el)return;
+  el.innerHTML=
+    '<div><b>'+(data.bank_code||'TPBank')+'</b> · '+(data.holder||'TRAN XUAN LOC')+'</div>'+
+    '<div>STK: <b>'+(data.bank_account||'')+'</b></div>'+
+    '<div>Số tiền: <b>'+AMOUNT.toLocaleString('vi-VN')+'đ</b></div>'+
+    '<div>Nội dung CK: <b class="code">'+(data.order_code||'')+'</b> <span style="color:var(--signal)">← không sửa</span></div>';
 }
 function openPay(){document.getElementById('modal').classList.add('on');document.body.style.overflow='hidden';}
 function closePay(){
@@ -671,40 +616,19 @@ async function createOrder(){
     const data=await (await fetch(url)).json();
     if(!data.ok){throw new Error(data.error||'create_failed');}
     currentCode=data.order_code;
-    pgCheckout=data.pg||null;
-    const qrText=AMOUNT.toLocaleString('vi-VN')+'đ · Nội dung: '+data.order_code;
-    document.getElementById('qrImg').src=data.qr_url;
-    document.getElementById('qrInfo').textContent=qrText;
-    document.getElementById('qrImgOnly').src=data.qr_url;
-    document.getElementById('qrInfoOnly').textContent=qrText;
+    document.getElementById('qrImg').src=data.qr_url+(data.qr_url.indexOf('?')>=0?'&':'?')+'_='+Date.now();
+    document.getElementById('qrInfo').textContent='Quét bằng app ngân hàng';
+    fillBankDetail(data);
     document.getElementById('paypalQr').src=PAYPAL_QR;
-    document.getElementById('paypalQrOnly').src=PAYPAL_QR;
     document.getElementById('paypalAmt').textContent='$'+PAYPAL_USD.toFixed(2)+' USD';
-    document.getElementById('paypalAmtOnly').textContent='$'+PAYPAL_USD.toFixed(2)+' USD';
     document.getElementById('paypalCode').textContent=data.order_code;
-    document.getElementById('paypalCodeOnly').textContent=data.order_code;
-    const showPg=pgCheckout&&(PAYMENT_MODE==='pg'||PAYMENT_MODE==='both');
-    const showQr=PAYMENT_MODE==='qr'||PAYMENT_MODE==='both';
-    usePgPrimary=!!showPg;
-    document.getElementById('panePg').style.display=showPg?'block':'none';
-    document.getElementById('paneQrOnly').style.display=showPg?'none':'block';
-    document.getElementById('altPayBlock').style.display=showQr?'block':'none';
-    if(showPg){
-      document.getElementById('pgAmt').textContent=AMOUNT.toLocaleString('vi-VN')+'đ';
-      document.getElementById('pgCode').textContent=data.order_code;
-      const envBadge=document.getElementById('pgEnvBadge');
-      if(envBadge&&pgCheckout.env==='sandbox')envBadge.textContent='SePay Sandbox · test';
-      else if(envBadge)envBadge.textContent='SePay · bảo mật';
-    }
     document.getElementById('infoStep').style.display='none';
     document.getElementById('payStep').style.display='block';
-    if(showPg){payTab='pg';document.getElementById('payTitle').textContent='Cổng SePay · '+AMOUNT.toLocaleString('vi-VN')+'đ';}
-    else if(showQr){setPayTab('vnd');startPolling();}
-    else setPayTab('paypal');
-    btn.disabled=false;btn.textContent='Tiếp theo · thanh toán qua SePay →';
+    setPayTab('vnd');
+    btn.disabled=false;btn.textContent='Tiếp theo · chọn cách thanh toán →';
   }catch(err){
     alert('Chưa tạo được đơn thanh toán. Kiểm tra lại API_URL nhé.');
-    btn.disabled=false;btn.textContent='Tiếp theo · thanh toán qua SePay →';
+    btn.disabled=false;btn.textContent='Tiếp theo · chọn cách thanh toán →';
   }
 }
 function startPolling(){

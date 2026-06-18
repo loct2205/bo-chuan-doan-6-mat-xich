@@ -1,20 +1,15 @@
 /**
- * Cấu hình site — sửa YOUR_* trước khi deploy Vercel.
- * Luồng thanh toán chính: SePay Cổng Thanh Toán (theo developer.sepay.vn)
+ * QR online SePay — giống my.sepay.vn/createqr (chọn "QR online")
+ * Website tự điền số tiền + mã đơn cho từng khách.
+ *
+ * Bắt buộc: my.sepay.vn → Webhooks → URL GAS + ?key=SEPAY_API_KEY
  */
 var SITE_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycby7unu5O0xJcu59PEuiovgjPaNENrIvGUwEIFgW5I93LtXoVRF-jP_7l5YL0Qn0AJHUfw/exec',
-  SITE_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app/',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzOnz00mRtqbMnSqlWFJ2lgZsAZbN5d5sEf39zL2VK1sy3FO14g0Z1JX1UsBCqszqnW0w/exec',
+  SITE_URL: 'https://bo-chuan-doan-6-mat-xich.vercel.app',
 
-  /**
-   * pg   = chỉ SePay Cổng (khuyến nghị, đúng docs SePay)
-   * qr   = chỉ VietQR + webhook ngân hàng (dự phòng)
-   * both = SePay Cổng + VietQR + PayPal
-   */
-  PAYMENT_MODE: 'pg',
-
-  AMOUNT: 99000,
-  ORDER_PREFIX: 'CD6X',
+  AMOUNT: 9000,
+  ORDER_PREFIX: 'DH',
 
   PRODUCT_HUB: 'kho-qua.html',
   DRIVE_GIFTS: 'https://drive.google.com/drive/folders/1RGvMJAA9Ci8OBzavx8gdoztprWGstHMG?usp=sharing',
