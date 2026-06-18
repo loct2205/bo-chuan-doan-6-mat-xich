@@ -125,6 +125,29 @@ function checkStatus_(p) {
 }
 
 
+function extractOrderCode_(text) {
+  if (!text) return '';
+  var m = String(text).toUpperCase().match(/\bDH[A-Z0-9]{4,10}\b/);
+  return m ? m[0] : '';
+}
+
+function tryMatchOrder_(sh, code, amount, txId) {
+  if (!code || code.indexOf('(') === 0) return false;
+  var o = findOrder_(sh, code);
+  if (!o || o.data[4] !== 'pending') return false;
+  var amt = Number(o.data[1]);
+  if (amount >= amt) {
+    markOrderPaid_(sh, o.row, txId, o.data[2], o.data[3], code);
+    return true;
+  }
+  if (amount > 0 && amount < amt) {
+    sh.getRange(o.row, 5).setValue('underpaid');
+    sh.getRange(o.row, 9).setValue('thieu ' + (amt - amount) + 'd');
+    return true;
+  }
+  return false;
+}
+
 function doPost(e) {
   var keyQuery = (e && e.parameter && e.parameter.key) || '';
   if (CONFIG.SEPAY_API_KEY &&
@@ -140,16 +163,32 @@ function doPost(e) {
     return json_({ success: true, note: 'ignored_out' });
   }
 
-  var content = (body.content || '') + ' ' + (body.code || '');
-  var amount  = body.transferAmount || 0;
+  var content = (body.content || '') + ' ' + (body.description || '') +
+                ' ' + (body.code || '');
+  var amount  = Number(body.transferAmount) || 0;
   var txId    = body.id;
   var sh = getSheet_();
   var values = sh.getDataRange().getValues();
 
   for (var r = 1; r < values.length; r++) {
-    if (String(values[r][7]) === String(txId)) {
+    if (txId != null && String(values[r][7]) === String(txId)) {
       return json_({ success: true, note: 'duplicate' });
     }
+  }
+
+  // Gửi thử SePay / payload rỗng — không ghi dòng (không khớp)
+  var hinted = '';
+  if (body.code && String(body.code).toUpperCase().indexOf('DH') === 0) {
+    hinted = String(body.code).toUpperCase();
+  } else {
+    hinted = extractOrderCode_(content);
+  }
+  if (amount <= 0 && !hinted) {
+    return json_({ success: true, note: 'ignored_test' });
+  }
+
+  if (hinted && tryMatchOrder_(sh, hinted, amount, txId)) {
+    return json_({ success: true });
   }
 
   for (var r = 1; r < values.length; r++) {
@@ -170,16 +209,19 @@ function doPost(e) {
     var status2 = values[r][4];
     if (status2 === 'pending' &&
         content.toUpperCase().indexOf(code2.toUpperCase()) !== -1 &&
-        amount < amt2) {
+        amount > 0 && amount < amt2) {
       sh.getRange(r + 1, 5).setValue('underpaid');
       sh.getRange(r + 1, 9).setValue('thieu ' + (amt2 - amount) + 'd');
       return json_({ success: true, note: 'underpaid' });
     }
   }
 
-  sh.appendRow(['(không khớp)', amount, '', '', 'unmatched',
-                new Date(), new Date(), txId, '-']);
-  return json_({ success: true, note: 'unmatched' });
+  // Chỉ log giao dịch thật (có tiền), bỏ qua gửi thử làm bẩn sheet
+  if (amount > 0) {
+    sh.appendRow(['(không khớp)', amount, '', '', 'unmatched',
+                  new Date(), new Date(), txId, '-']);
+  }
+  return json_({ success: true, note: amount > 0 ? 'unmatched' : 'ignored' });
 }
 
 
